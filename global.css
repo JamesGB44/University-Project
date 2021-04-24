@@ -77,6 +77,11 @@ body{
 	padding-left: 25px;
 }
 
+.leaflet-right{
+	padding-top: 10px;
+	padding-right: 25px;
+}
+
 
 
 .vote-share-table-container{
@@ -84,11 +89,13 @@ body{
    visibility: visible;
 }
 
-.vote-share-table-container table, th, td {
+.vote-share-table-container table, th, td{
   border: 1px solid black;
   border-collapse: collapse;
   background-color: white;
   text-align: center;
+  width: 100px;
+  height: 30px;
 }
 .vote-share-table-container th, td {
   padding: 5px;    
@@ -111,6 +118,8 @@ body{
   pointer-events: auto;
   text-align: center;
   cursor: pointer;
+  width: 100px;
+  height: 30px;
 }
 
 .vote-share-table-container:after {
@@ -121,6 +130,63 @@ body{
 .vote-share-table-container button:hover {
   background-color: grey;
 }
+
+
+.results-table-container{
+   margin-top: 10px;
+   visibility: visible;
+}
+
+.results-table-container table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  background-color: white;
+  text-align: center;
+  height: 25px;
+  width: 85px;
+}
+.results-table-container th, td {
+  padding: 5px;    
+}
+
+.results-table-container button {
+  padding: 5px;
+  background-color: inherit;
+  border: none;
+  font-size: inherit;
+  font-weight: inherit; 
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.results-table-container input {
+  padding: 5px;
+  font-size: inherit;
+  font-weight: inherit; 
+  border: none;
+  text-align: center;
+  height: 25px;
+  width: 44px;
+}
+
+.results-table-container #ResultsTableTitle {
+  width: 100%;
+}
+
+.results-table-container #Party1Name, #Party2Name, #Party3Name, #Party4Name, #Party5Name, #Party6Name, #Party1Votes, #Party2Votes, #Party3Votes, #Party4Votes, #Party5Votes, #Party6Votes {
+  width: 85px;
+}
+
+
+.results-table-container:after {
+  content: "";
+  clear: both;
+}
+
+.results-table-container button:hover {
+  background-color: grey;
+}
+
 
 .btn-group button {
   background-color: #4CAF50; /* Green background */

@@ -397,8 +397,17 @@ function calculateUserPrediction() {
 		constituenciesSL.resetStyle(layer);
 	});
 
+	//Seat Calculation Here
  
-	
+	//Update Table
+	document.getElementById("Party1Name").value = prevCDUVoteShare;
+	document.getElementById("Party1Votes").value = prevSPDVoteShare;
+	document.getElementById("Party1VoteShare").value = prevAfDVoteShare;
+	document.getElementById("Party1Swing").value = prevFDPVoteShare;
+	document.getElementById("Party1DirectSeats").value = prevLeftVoteShare;
+	document.getElementById("Party1Seats").value = prevGreenVoteShare;
+	document.getElementById("Party1SeatChange").value = prevGreenVoteShare;
+	document.getElementById("Party1SeatShare").value = prevGreenVoteShare;
 }
 
 
@@ -432,6 +441,7 @@ function resetMap() {
 	federalLevel = true;
 	
 	displayVoteShareTable();
+	document.getElementById("ResultsTableTitle").value = "Federal Level";
 
 	map.addLayer(states);
 	resetHighlightStates(states);
@@ -515,6 +525,8 @@ function zoomToFeatureStatesToConstituencies(e) {
 	map.fitBounds(e.target.getBounds());
 	states.remove();
 	
+	var stateName = "Saxony";
+	
 	((e.target.feature.properties.Name == "Schleswig-Holstein") ?	map.addLayer(constituenciesSH)
 	: (e.target.feature.properties.Name == "Hamburg") ? map.addLayer(constituenciesHM)
 	: (e.target.feature.properties.Name == "Lower Saxony") ? map.addLayer(constituenciesLS)
@@ -531,6 +543,19 @@ function zoomToFeatureStatesToConstituencies(e) {
 	: (e.target.feature.properties.Name == "Saxony") ? map.addLayer(constituenciesSA)
 	: (e.target.feature.properties.Name == "Saxony-Anhalt") ? map.addLayer(constituenciesST)
 	: map.addLayer(constituenciesTH))
+	
+	//Update Table
+	document.getElementById("ResultsTableTitle").value = "Saxony";
+	
+	document.getElementById("Party1Name").value = prevCDUVoteShare;
+	document.getElementById("Party1Votes").value = prevSPDVoteShare;
+	document.getElementById("Party1VoteShare").value = prevAfDVoteShare;
+	document.getElementById("Party1Swing").value = prevFDPVoteShare;
+	document.getElementById("Party1DirectSeats").value = prevLeftVoteShare;
+	document.getElementById("Party1Seats").value = prevGreenVoteShare;
+	document.getElementById("Party1SeatChange").value = prevGreenVoteShare;
+	document.getElementById("Party1SeatShare").value = prevGreenVoteShare;
+	
 }
 
 
