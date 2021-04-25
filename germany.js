@@ -37,6 +37,133 @@ FDPModifier = 1 + ((FDPprediction - prevFDPVoteShare) / prevFDPVoteShare);
 GreenModifier = 1 + ((Greenprediction - prevGreenVoteShare) / prevGreenVoteShare);
 LeftModifier = 1 + ((Leftprediction - prevLeftVoteShare) / prevLeftVoteShare);
 CSUModifier = CDUModifier;
+
+
+var states = L.geoJson(bundeslandData, {
+	style: styleStates,
+	onEachFeature: onEachFeatureStates
+}).addTo(map);
+
+var constituenciesSH = L.geoJson(constituenciesSH, {
+	style: styleConstituencies,
+	onEachFeature: onEachFeatureConstituencies
+});
+
+var constituenciesMV = L.geoJson(constituenciesMV, {
+	style: styleConstituencies,
+	onEachFeature: onEachFeatureConstituencies
+});
+
+var constituenciesHM = L.geoJson(constituenciesHM, {
+	style: styleConstituencies,
+	onEachFeature: onEachFeatureConstituencies
+});
+
+var constituenciesLS = L.geoJson(constituenciesLS, {
+	style: styleConstituencies,
+	onEachFeature: onEachFeatureConstituencies
+});
+
+var constituenciesBM = L.geoJson(constituenciesBM, {
+	style: styleConstituencies,
+	onEachFeature: onEachFeatureConstituencies
+});
+
+var constituenciesBB = L.geoJson(constituenciesBB, {
+	style: styleConstituencies,
+	onEachFeature: onEachFeatureConstituencies
+});
+
+var constituenciesST = L.geoJson(constituenciesST, {
+	style: styleConstituencies,
+	onEachFeature: onEachFeatureConstituencies
+});
+
+var constituenciesBE = L.geoJson(constituenciesBE, {
+	style: styleConstituencies,
+	onEachFeature: onEachFeatureConstituencies
+});
+
+var constituenciesNRW = L.geoJson(constituenciesNRW, {
+	style: styleConstituencies,
+	onEachFeature: onEachFeatureConstituencies
+});
+
+var constituenciesSA = L.geoJson(constituenciesSA, {
+	style: styleConstituencies,
+	onEachFeature: onEachFeatureConstituencies
+});
+
+var constituenciesHE = L.geoJson(constituenciesHE, {
+	style: styleConstituencies,
+	onEachFeature: onEachFeatureConstituencies
+});
+
+var constituenciesTH = L.geoJson(constituenciesTH, {
+	style: styleConstituencies,
+	onEachFeature: onEachFeatureConstituencies
+});
+
+var constituenciesRP = L.geoJson(constituenciesRP, {
+	style: styleConstituencies,
+	onEachFeature: onEachFeatureConstituencies
+});
+
+var constituenciesBY = L.geoJson(constituenciesBY, {
+	style: styleConstituencies,
+	onEachFeature: onEachFeatureConstituencies
+});
+
+var constituenciesBW = L.geoJson(constituenciesBW, {
+	style: styleConstituencies,
+	onEachFeature: onEachFeatureConstituencies
+});
+
+var constituenciesSL = L.geoJson(constituenciesSL, {
+	style: styleConstituencies,
+	onEachFeature: onEachFeatureConstituencies
+});
+
+
+prevResultsSH = fillStateArrays(constituenciesSH, false, true);
+prevResultsMV = fillStateArrays(constituenciesMV, false, true);
+prevResultsHM = fillStateArrays(constituenciesHM, false, true);
+prevResultsLS = fillStateArrays(constituenciesLS, false, true);
+prevResultsBM = fillStateArrays(constituenciesBM, false, true);
+prevResultsBB = fillStateArrays(constituenciesBB, false, true);
+prevResultsST = fillStateArrays(constituenciesST, false, true);
+prevResultsBE = fillStateArrays(constituenciesBE, false, true);
+prevResultsNRW = fillStateArrays(constituenciesNRW, false, true);
+prevResultsSA = fillStateArrays(constituenciesSA, false, true);
+prevResultsHE = fillStateArrays(constituenciesHE, false, true);
+prevResultsTH = fillStateArrays(constituenciesTH, false, true);
+prevResultsRP = fillStateArrays(constituenciesRP, false, true);
+prevResultsBY = fillStateArrays(constituenciesBY, true, true);
+prevResultsBW = fillStateArrays(constituenciesBW, false, true);
+prevResultsSL = fillStateArrays(constituenciesSL, false, true);
+
+currResultsSH = fillStateArrays(constituenciesSH, false, false);
+currResultsMV = fillStateArrays(constituenciesMV, false, false);
+currResultsHM = fillStateArrays(constituenciesHM, false, false);
+currResultsLS = fillStateArrays(constituenciesLS, false, false);
+currResultsBM = fillStateArrays(constituenciesBM, false, false);
+currResultsBB = fillStateArrays(constituenciesBB, false, false);
+currResultsST = fillStateArrays(constituenciesST, false, false);
+currResultsBE = fillStateArrays(constituenciesBE, false, false);
+currResultsNRW = fillStateArrays(constituenciesNRW, false, false);
+currResultsSA = fillStateArrays(constituenciesSA, false, false);
+currResultsHE = fillStateArrays(constituenciesHE, false, false);
+currResultsTH = fillStateArrays(constituenciesTH, false, false);
+currResultsRP = fillStateArrays(constituenciesRP, false, false);
+currResultsBY = fillStateArrays(constituenciesBY, true, false);
+currResultsBW = fillStateArrays(constituenciesBW, false, false);
+currResultsSL = fillStateArrays(constituenciesSL, false, false);
+
+var currFederalResults;
+prevFederalResults = fillFederalArray();
+
+
+
 /*
 console.log(SPDModifier);
 console.log(CDUModifier);
@@ -47,6 +174,95 @@ console.log(LeftModifier);
 console.log(CSUModifier);
 */
 //borders
+
+function constituencyWinner(currentLayer, currentStateResults, currentParty) {
+	SPDVotes = currentLayer.feature.properties.SPDVote1 * SPDModifier;
+	CDUVotes = currentLayer.feature.properties.CDUVote1 * CDUModifier;
+	AfDVotes = currentLayer.feature.properties.AfDVote1 * AfDModifier;
+	FDPVotes = currentLayer.feature.properties.FDPVote1 * FDPModifier;
+	GreenVotes = currentLayer.feature.properties.GreenVote1 * GreenModifier;
+	LeftVotes = currentLayer.feature.properties.LeftVote1 * LeftModifier;
+	CSUVotes = currentLayer.feature.properties.CSUVote1 * CDUModifier;
+	
+	
+	if ((SPDVotes > CDUVotes) && (SPDVotes > AfDVotes) && (SPDVotes > FDPVotes) && (SPDVotes > GreenVotes) && (SPDVotes > LeftVotes) && (SPDVotes > CSUVotes)){
+		if (currentParty == "SPD")
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	if ((CDUVotes > SPDVotes) && (CDUVotes > AfDVotes) && (CDUVotes > FDPVotes) && (CDUVotes > GreenVotes) && (CDUVotes > LeftVotes) && (CDUVotes > CSUVotes)) {
+		if (currentParty == "CDU")
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		
+	}
+	if ((AfDVotes > SPDVotes) && (AfDVotes > CDUVotes) && (AfDVotes > FDPVotes) && (AfDVotes > GreenVotes) && (AfDVotes > LeftVotes) && (AfDVotes > CSUVotes)) {
+		if (currentParty == "AfD")
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		
+	}
+	if ((FDPVotes > SPDVotes) && (FDPVotes > CDUVotes) && (FDPVotes > AfDVotes) && (FDPVotes > GreenVotes) && (FDPVotes > LeftVotes) && (FDPVotes > CSUVotes)) {
+		if (currentParty == "FDP")
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		
+	}
+	if ((GreenVotes > SPDVotes) && (GreenVotes > CDUVotes) && (GreenVotes > FDPVotes) && (GreenVotes > AfDVotes) && (GreenVotes > LeftVotes) && (GreenVotes > CSUVotes)) {
+		if (currentParty == "Green")
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		
+	}
+	if ((LeftVotes > SPDVotes) && (LeftVotes > CDUVotes) && (LeftVotes > FDPVotes) && (LeftVotes > GreenVotes) && (LeftVotes > AfDVotes) && (LeftVotes > CSUVotes)){
+		if (currentParty == "The Left")
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		
+	}
+	if ((CSUVotes > SPDVotes) && (CSUVotes > CDUVotes) && (CSUVotes > FDPVotes) && (CSUVotes > GreenVotes) && (CSUVotes > AfDVotes) && (CSUVotes > LeftVotes)) {
+		if (currentParty == "CSU")
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		
+	}
+}
+
 function styleConstituencies(feature) {
 	SPDVotes = feature.properties.SPDVote1 * SPDModifier;
 	CDUVotes = feature.properties.CDUVote1 * CDUModifier;
@@ -143,7 +359,6 @@ function styleConstituencies(feature) {
 	}
 }
 
-
 function styleStates(feature) {
 	SPDVotes = feature.properties.SPDVote * SPDModifier;
 	CDUVotes = feature.properties.CDUVote * CDUModifier;
@@ -239,8 +454,152 @@ function styleStates(feature) {
 	}
 }
 
+function fillStateArrays(stateCollection, isBavaria, initialisation) {
+	let noOfParties = 6;
+	
+	if (initialisation)
+	{
+		SPDModifier = 1;
+		CDUModifier = 1;
+		AfDModifier = 1;
+		FDPModifier = 1;
+		GreenModifier = 1;
+		LeftModifier = 1;
+		CSUModifier = CDUModifier;
+	}
 
 
+	var results = new Array(noOfParties);
+	for (var i = 0; i < results.length; i++) {
+		results[i] = new Array(4); //Loop through depending on how many districts there are and create new fields.
+		results[i][1] = 0;
+		results[i][2] = 0;
+	}
+
+	var index = 0; //Default index to 0 as this is the standard starting point for any array.
+	if (isBavaria)
+	{
+		var parties = ["SPD","CSU","AfD","FDP","The Left","Green"];
+		
+		stateCollection.eachLayer(function(currentLayer){
+		for (var i = 0; i < parties.length; i++){
+			results[index][0] = parties[i]; 
+			results[index][1] = results[index][1] + ((parties[i] == "SPD") ? Math.round(((currentLayer.feature.properties.SPDVote2 * SPDModifier) * 1) / 1)
+			: (parties[i] == "CSU") ? Math.round(((currentLayer.feature.properties.CSUVote2 * CDUModifier) * 1) / 1)
+			: (parties[i] == "AfD") ? Math.round(((currentLayer.feature.properties.AfDVote2 * AfDModifier) * 1) / 1)
+			: (parties[i] == "FDP") ? Math.round(((currentLayer.feature.properties.FDPVote2 * FDPModifier) * 1) / 1)
+			: (parties[i] == "The Left") ? Math.round(((currentLayer.feature.properties.LeftVote2 * LeftModifier) * 1) / 1)
+			: Math.round(((currentLayer.feature.properties.GreenVote2 * GreenModifier) * 1) / 1));
+			results[index][2] = (constituencyWinner(currentLayer, results, parties[i]) ? results[index][2] = results[index][2] + 1 : results[index][2]);
+			results[index][3] = 0;
+			index++;
+		}
+		index = 0;
+	
+		});	
+	}
+	else
+	{
+		var parties = ["SPD","CDU","AfD","FDP","The Left","Green"];
+		
+		stateCollection.eachLayer(function(currentLayer){
+		for (var i = 0; i < parties.length; i++){
+			results[index][0] = parties[i]; 
+			results[index][1] = results[index][1] + ((parties[i] == "SPD") ? Math.round(((currentLayer.feature.properties.SPDVote2 * SPDModifier) * 1) / 1)
+			: (parties[i] == "CDU") ? Math.round(((currentLayer.feature.properties.CDUVote2 * CDUModifier) * 1) / 1)
+			: (parties[i] == "AfD") ? Math.round(((currentLayer.feature.properties.AfDVote2 * AfDModifier) * 1) / 1)
+			: (parties[i] == "FDP") ? Math.round(((currentLayer.feature.properties.FDPVote2 * FDPModifier) * 1) / 1)
+			: (parties[i] == "The Left") ? Math.round(((currentLayer.feature.properties.LeftVote2 * LeftModifier) * 1) / 1)
+			: Math.round(((currentLayer.feature.properties.GreenVote2 * GreenModifier) * 1) / 1));
+			results[index][2] = (constituencyWinner(currentLayer, results, parties[i]) ? results[index][2] = results[index][2] + 1 : results[index][2]);
+			results[index][3] = 0;
+			index++;
+		}
+		index = 0;
+	
+		});	;	
+	}
+	return results;
+}
+
+function fillFederalArrayByState(currentArray, results){
+	
+	for (var i = 0; i < currentArray.length; i++) {
+		if (currentArray[i][0] == "SPD")
+		{
+			results[0][1] = results[0][1] + currentArray[i][1];
+			results[0][2] = results[0][2] + currentArray[i][2];
+			results[0][3] = results[0][3] + currentArray[i][3];
+		}
+		if ((currentArray[i][0] == "CDU") || (currentArray[i][0] == "CSU"))
+		{
+			results[1][1] = results[1][1] + currentArray[i][1];
+			results[1][2] = results[1][2] + currentArray[i][2];
+			results[1][3] = results[1][3] + currentArray[i][3];
+		}
+		if (currentArray[i][0] == "AfD")
+		{
+			results[2][1] = results[2][1] + currentArray[i][1];
+			results[2][2] = results[2][2] + currentArray[i][2];
+			results[2][3] = results[2][3] + currentArray[i][3];
+		}
+		if (currentArray[i][0] == "FDP")
+		{
+			results[3][1] = results[3][1] + currentArray[i][1];
+			results[3][2] = results[3][2] + currentArray[i][2];
+			results[3][3] = results[3][3] + currentArray[i][3];
+		}
+		if (currentArray[i][0] == "The Left")
+		{
+			results[4][1] = results[4][1] + currentArray[i][1];
+			results[4][2] = results[4][2] + currentArray[i][2];
+			results[4][3] = results[4][3] + currentArray[i][3];
+		}
+		if (currentArray[i][0] == "Green")
+		{
+			results[5][1] = results[5][1] + currentArray[i][1];
+			results[5][2] = results[5][2] + currentArray[i][2];
+			results[5][3] = results[5][3] + currentArray[i][3];
+		}		
+	}
+	
+	return results;
+	
+}
+
+function fillFederalArray() {
+	let noOfParties = 6;
+
+	var parties = ["SPD","CDU/CSU","AfD","FDP","The Left","Green"];
+	var results = new Array(noOfParties);
+	for (var i = 0; i < results.length; i++) {
+		results[i] = new Array(4); //Loop through depending on how many districts there are and create new fields.
+		results[i][0] = parties[i];
+		results[i][1] = 0;
+		results[i][2] = 0;
+		results[i][3] = 0;
+	}
+	
+	results = fillFederalArrayByState(currResultsSH, results);
+	results = fillFederalArrayByState(currResultsMV, results);
+	results = fillFederalArrayByState(currResultsHM, results);
+	results = fillFederalArrayByState(currResultsLS, results);
+	results = fillFederalArrayByState(currResultsBM, results);
+	results = fillFederalArrayByState(currResultsBB, results);
+	results = fillFederalArrayByState(currResultsST, results);
+	results = fillFederalArrayByState(currResultsBE, results);
+	results = fillFederalArrayByState(currResultsNRW, results);
+	results = fillFederalArrayByState(currResultsSA, results);
+	results = fillFederalArrayByState(currResultsHE, results);
+	results = fillFederalArrayByState(currResultsTH, results);
+	results = fillFederalArrayByState(currResultsRP, results);
+	results = fillFederalArrayByState(currResultsBY, results);
+	results = fillFederalArrayByState(currResultsBW, results);
+	results = fillFederalArrayByState(currResultsSL, results);
+	
+	return results;
+	
+}
 
 function highlightFeatureStates(e) {
 	var layer = e.target;
@@ -255,16 +614,6 @@ function highlightFeatureStates(e) {
 	if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
 		layer.bringToFront();
 	}
-	
-	var results = [["SPD",parseInt(layer.feature.properties.SPDVote * SPDModifier, 10)],
-	["AfD",parseInt(layer.feature.properties.AfDVote * AfDModifier, 10)],
-	["CDU",parseInt(layer.feature.properties.CDUVote * CDUModifier, 10)],
-	["FDP",parseInt(layer.feature.properties.FDPVote  * FDPModifier, 10)],
-	["Green",parseInt(layer.feature.properties.GreenVote  * GreenModifier, 10)],
-	["Left",parseInt(layer.feature.properties.LeftVote * LeftModifier, 10)],
-	["CSU",parseInt(layer.feature.properties.CSUVote * CSUModifier, 10)]];
-	results.sort(sortFunction);
-
 }
 
 //Return information on mouse over, also highlight borders
@@ -281,16 +630,6 @@ function highlightFeatureConstituency(e) {
 	if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
 		layer.bringToFront();
 	}
-	
-	var results = [["SPD",parseInt(layer.feature.properties.SPDVote1 * SPDModifier, 10)],
-	["AfD",parseInt(layer.feature.properties.AfDVote1 * AfDModifier, 10)],
-	["CDU",parseInt(layer.feature.properties.CDUVote1 * CDUModifier, 10)],
-	["FDP",parseInt(layer.feature.properties.FDPVote1  * FDPModifier, 10)],
-	["Green",parseInt(layer.feature.properties.GreenVote1  * GreenModifier, 10)],
-	["Left",parseInt(layer.feature.properties.LeftVote1 * LeftModifier, 10)],
-	["CSU",parseInt(layer.feature.properties.CSUVote1 * CSUModifier, 10)]];
-	results.sort(sortFunction);
-
 }
 
 function sortFunction(a, b) {
@@ -324,6 +663,8 @@ function displayCurrentProjection() {
 	document.getElementById("FDPInput").value = FDPprediction;
 	document.getElementById("LeftInput").value = Leftprediction;
 	document.getElementById("GreenInput").value = Greenprediction;
+	
+	calculateUserPrediction();
 }
 
 function displayPrevResults() {
@@ -333,6 +674,8 @@ function displayPrevResults() {
 	document.getElementById("FDPInput").value = prevFDPVoteShare;
 	document.getElementById("LeftInput").value = prevLeftVoteShare;
 	document.getElementById("GreenInput").value = prevGreenVoteShare;
+	
+	calculateUserPrediction();
 }
 
 function calculateUserPrediction() {
@@ -344,6 +687,25 @@ function calculateUserPrediction() {
 	GreenModifier = 1 + ((document.getElementById("GreenInput").value - prevGreenVoteShare) / prevGreenVoteShare);
 	LeftModifier = 1 + ((document.getElementById("LeftInput").value - prevLeftVoteShare) / prevLeftVoteShare);
 	CSUModifier = CDUModifier;
+	
+	currResultsSH = fillStateArrays(constituenciesSH, false, false);
+	currResultsMV = fillStateArrays(constituenciesMV, false, false);
+	currResultsHM = fillStateArrays(constituenciesHM, false, false);
+	currResultsLS = fillStateArrays(constituenciesLS, false, false);
+	currResultsBM = fillStateArrays(constituenciesBM, false, false);
+	currResultsBB = fillStateArrays(constituenciesBB, false, false);
+	currResultsST = fillStateArrays(constituenciesST, false, false);
+	currResultsBE = fillStateArrays(constituenciesBE, false, false);
+	currResultsNRW = fillStateArrays(constituenciesNRW, false, false);
+	currResultsSA = fillStateArrays(constituenciesSA, false, false);
+	currResultsHE = fillStateArrays(constituenciesHE, false, false);
+	currResultsTH = fillStateArrays(constituenciesTH, false, false);
+	currResultsRP = fillStateArrays(constituenciesRP, false, false);
+	currResultsBY = fillStateArrays(constituenciesBY, true, false);
+	currResultsBW = fillStateArrays(constituenciesBW, false, false);
+	currResultsSL = fillStateArrays(constituenciesSL, false, false);
+
+	currFederalResults = fillFederalArray();
 	
 	states.eachLayer(function(layer){ //Iterate through each layer in a collection
 		states.resetStyle(layer);
@@ -400,14 +762,8 @@ function calculateUserPrediction() {
 	//Seat Calculation Here
  
 	//Update Table
-	document.getElementById("Party1Name").value = prevCDUVoteShare;
-	document.getElementById("Party1Votes").value = prevSPDVoteShare;
-	document.getElementById("Party1VoteShare").value = prevAfDVoteShare;
-	document.getElementById("Party1Swing").value = prevFDPVoteShare;
-	document.getElementById("Party1DirectSeats").value = prevLeftVoteShare;
-	document.getElementById("Party1Seats").value = prevGreenVoteShare;
-	document.getElementById("Party1SeatChange").value = prevGreenVoteShare;
-	document.getElementById("Party1SeatShare").value = prevGreenVoteShare;
+	currFederalResults.sort(sortFunction);
+	updateResultsTable(currFederalResults, prevFederalResults);
 }
 
 
@@ -442,6 +798,9 @@ function resetMap() {
 	
 	displayVoteShareTable();
 	document.getElementById("ResultsTableTitle").value = "Federal Level";
+	
+	currFederalResults.sort(sortFunction);
+	updateResultsTable(currFederalResults, prevFederalResults);
 
 	map.addLayer(states);
 	resetHighlightStates(states);
@@ -475,6 +834,9 @@ function switchDisplay() {
 		
 		displayVoteShareTable();
 		
+		currFederalResults.sort(sortFunction);
+		updateResultsTable(currFederalResults, prevFederalResults);
+		
 		federalLevel = true;
 		stateMode = false;
 	}	
@@ -503,6 +865,9 @@ function switchDisplay() {
 		
 		displayVoteShareTable();
 		
+		currFederalResults.sort(sortFunction);
+		updateResultsTable(currFederalResults, prevFederalResults);
+		
 		federalLevel = true;
 		stateMode = true;
 	}
@@ -526,7 +891,7 @@ function zoomToFeatureStatesToConstituencies(e) {
 	states.remove();
 	
 	
-	((e.target.feature.properties.Name == "Schleswig-Holstein") ?	map.addLayer(constituenciesSH)
+	((e.target.feature.properties.Name == "Schleswig-Holstein") ? map.addLayer(constituenciesSH)
 	: (e.target.feature.properties.Name == "Hamburg") ? map.addLayer(constituenciesHM)
 	: (e.target.feature.properties.Name == "Lower Saxony") ? map.addLayer(constituenciesLS)
 	: (e.target.feature.properties.Name == "Bremen") ? map.addLayer(constituenciesBM)
@@ -541,25 +906,47 @@ function zoomToFeatureStatesToConstituencies(e) {
 	: (e.target.feature.properties.Name == "Mecklenburg-Vorpommern") ? map.addLayer(constituenciesMV)
 	: (e.target.feature.properties.Name == "Saxony") ? map.addLayer(constituenciesSA)
 	: (e.target.feature.properties.Name == "Saxony-Anhalt") ? map.addLayer(constituenciesST)
-	: map.addLayer(constituenciesTH))
+	: map.addLayer(constituenciesTH));
 	
-	//Update Table
 	document.getElementById("ResultsTableTitle").value = e.target.feature.properties.Name;
 	
-	var totalVotes = 0, totalSeats = 0;
-	for (i = 0; i < currFederalResults.length; i++){
-		totalVotes = totalVotes + currFederalResults[0][1]
-		totalSeats = totalSeats + currFederalResults[0][2] + currFederalResults[0][3]
-	}
+	((e.target.feature.properties.Name == "Schleswig-Holstein") ? currResultsSH.sort(sortFunction)
+	: (e.target.feature.properties.Name == "Hamburg") ? currResultsHM.sort(sortFunction)
+	: (e.target.feature.properties.Name == "Lower Saxony") ? currResultsLS.sort(sortFunction)
+	: (e.target.feature.properties.Name == "Bremen") ? currResultsBM.sort(sortFunction)
+	: (e.target.feature.properties.Name == "North Rhine-Westphalia") ? currResultsNRW.sort(sortFunction)
+	: (e.target.feature.properties.Name == "Hesse") ? currResultsHE.sort(sortFunction)
+	: (e.target.feature.properties.Name == "Rheinland-Palatinate") ? currResultsRP.sort(sortFunction)
+	: (e.target.feature.properties.Name == "Baden-Wurttemberg") ? currResultsBW.sort(sortFunction)
+	: (e.target.feature.properties.Name == "Bavaria") ? currResultsBY.sort(sortFunction)
+	: (e.target.feature.properties.Name == "Saarland") ? currResultsSL.sort(sortFunction)
+	: (e.target.feature.properties.Name == "Berlin") ? currResultsBE.sort(sortFunction)
+	: (e.target.feature.properties.Name == "Brandenburg") ? currResultsBB.sort(sortFunction)
+	: (e.target.feature.properties.Name == "Mecklenburg-Vorpommern") ? currResultsMV.sort(sortFunction)
+	: (e.target.feature.properties.Name == "Saxony") ? currResultsSA.sort(sortFunction)
+	: (e.target.feature.properties.Name == "Saxony-Anhalt") ? currResultsST.sort(sortFunction)
+	: currResultsTH.sort(sortFunction));
 	
-	document.getElementById("Party1Name").value = currFederalResults[0][0];
-	document.getElementById("Party1Votes").value = currFederalResults[0][1];
-	document.getElementById("Party1VoteShare").value = Math.round(((currFederalResults[0][1] / totalVotes * 100) * 10) / 10);
-	document.getElementById("Party1Swing").value = (currFederalResults[0][1] / totalVotes * 100) - (prevFederalResults[0][1] / totalVotes * 100);
-	document.getElementById("Party1DirectSeats").value = currFederalResults[0][2];
-	document.getElementById("Party1Seats").value = currFederalResults[0][2] + currFederalResults[0][3];
-	document.getElementById("Party1SeatChange").value = (currFederalResults[0][2] + currFederalResults[0][3]) - (prevFederalResults[0][2] + prevFederalResults[0][3]);
-	document.getElementById("Party1SeatShare").value = Math.round(((currFederalResults[0][2] + currFederalResults[0][3]) / totalSeats * 100) * 10) / 10;
+	((e.target.feature.properties.Name == "Schleswig-Holstein") ? updateResultsTable(currResultsSH, prevResultsSH)
+	: (e.target.feature.properties.Name == "Hamburg") ? updateResultsTable(currResultsHM, prevResultsHM)
+	: (e.target.feature.properties.Name == "Lower Saxony") ? updateResultsTable(currResultsLS, prevResultsLS)
+	: (e.target.feature.properties.Name == "Bremen") ? updateResultsTable(currResultsBM, prevResultsBM)
+	: (e.target.feature.properties.Name == "North Rhine-Westphalia") ? updateResultsTable(currResultsNRW, prevResultsNRW)
+	: (e.target.feature.properties.Name == "Hesse") ? updateResultsTable(currResultsHE, prevResultsHE)
+	: (e.target.feature.properties.Name == "Rheinland-Palatinate") ? updateResultsTable(currResultsRP, prevResultsRP)
+	: (e.target.feature.properties.Name == "Baden-Wurttemberg") ? updateResultsTable(currResultsBW, prevResultsBW)
+	: (e.target.feature.properties.Name == "Bavaria") ? updateResultsTable(currResultsBY, prevResultsBY)
+	: (e.target.feature.properties.Name == "Saarland") ? updateResultsTable(currResultsSL, prevResultsSL)
+	: (e.target.feature.properties.Name == "Berlin") ? updateResultsTable(currResultsBE, prevResultsBE)
+	: (e.target.feature.properties.Name == "Brandenburg") ? updateResultsTable(currResultsBB, prevResultsBB)
+	: (e.target.feature.properties.Name == "Mecklenburg-Vorpommern") ? updateResultsTable(currResultsMV, prevResultsMV)
+	: (e.target.feature.properties.Name == "Saxony") ? updateResultsTable(currResultsSA, prevResultsSA)
+	: (e.target.feature.properties.Name == "Saxony-Anhalt") ? updateResultsTable(currResultsST, prevResultsST)
+	: updateResultsTable(currResultsTH, prevResultsTH));
+	
+	
+	
+	
 	
 }
 
@@ -648,103 +1035,84 @@ function displayPopup(e) {
 
 }
 
-var prevFederalResults = [["CDU/CSU",15317344,231,15],
-	["SPD",9539381,59,94],
-	["AfD",5878115,3,91],
-	["FDP",4999449,0,80],
-	["The Left",4297270,5,64],
-	["Green",4158400,4,66]];
+function updateResultsTable(currResults, prevResults) {
 
-var currFederalResults = [["CDU/CSU",8748451+2469688,182,45],
-	["SPD",6156471,59,94],
-	["AfD",5415256,16,67],
-	["FDP",5845125,0,90],
-	["The Left",3945481,3,61],
-	["Green",1051487,48,137]];
+	var indexs = new Array(6);
+	index = 0;
+	
+	for (var i = 0; i < currResults.length; i++) {
+		for (var j = 0; j < prevResults.length; j++){
+			if (prevResults[j][0] == currResults[i][0]) {
+				indexs[index] = j;
+				index++;
+			}
+		}
+	}
+
+	
+	var totalVotesCurr = 0, totalSeats = 0, totalVotesPrev = 0;
+	for (i = 0; i < currResults.length; i++){
+		totalVotesCurr = totalVotesCurr + currResults[i][1]
+		totalSeats = totalSeats + currResults[i][2] + currResults[i][3]
+		totalVotesPrev = totalVotesPrev + prevResults[i][1]
+	}
+
+	
+	document.getElementById("Party1Name").value = currResults[0][0];
+	document.getElementById("Party1Votes").value = currResults[0][1];
+	document.getElementById("Party1VoteShare").value = Math.round((currResults[0][1] / totalVotesCurr * 100) * 10) / 10;
+	document.getElementById("Party1Swing").value = Math.round(((currResults[0][1] / totalVotesCurr * 100) - (prevResults[indexs[0]][1] / totalVotesPrev * 100)) * 10) / 10;
+	document.getElementById("Party1DirectSeats").value = currResults[0][2];
+	document.getElementById("Party1Seats").value = currResults[0][2] + currResults[0][3];
+	document.getElementById("Party1SeatChange").value = (currResults[0][2] + currResults[0][3]) - (prevResults[indexs[0]][2] + prevResults[indexs[0]][3]);
+	document.getElementById("Party1SeatShare").value = Math.round(((currResults[0][2] + currResults[0][3]) / totalSeats * 100) * 10) / 10;
+	
+	document.getElementById("Party2Name").value = currResults[1][0];
+	document.getElementById("Party2Votes").value = currResults[1][1];
+	document.getElementById("Party2VoteShare").value = Math.round((currResults[1][1] / totalVotesCurr * 100) * 10) / 10;
+	document.getElementById("Party2Swing").value = Math.round(((currResults[1][1] / totalVotesCurr * 100) - (prevResults[indexs[1]][1] / totalVotesPrev * 100)) * 10) / 10;
+	document.getElementById("Party2DirectSeats").value = currResults[1][2];
+	document.getElementById("Party2Seats").value = currResults[1][2] + currResults[1][3];
+	document.getElementById("Party2SeatChange").value = (currResults[1][2] + currResults[1][3]) - (prevResults[indexs[1]][2] + prevResults[indexs[1]][3]);
+	document.getElementById("Party2SeatShare").value = Math.round(((currResults[1][2] + currResults[1][3]) / totalSeats * 100) * 10) / 10;
+
+	document.getElementById("Party3Name").value = currResults[2][0];
+	document.getElementById("Party3Votes").value = currResults[2][1];
+	document.getElementById("Party3VoteShare").value = Math.round((currResults[2][1] / totalVotesCurr * 100) * 10) / 10;
+	document.getElementById("Party3Swing").value = Math.round(((currResults[2][1] / totalVotesCurr * 100) - (prevResults[indexs[2]][1] / totalVotesPrev * 100)) * 10) / 10;
+	document.getElementById("Party3DirectSeats").value = currResults[2][2];
+	document.getElementById("Party3Seats").value = currResults[2][2] + currResults[2][3];
+	document.getElementById("Party3SeatChange").value = (currResults[2][2] + currResults[2][3]) - (prevResults[indexs[2]][2] + prevResults[indexs[2]][3]);
+	document.getElementById("Party3SeatShare").value = Math.round(((currResults[2][2] + currResults[2][3]) / totalSeats * 100) * 10) / 10;
+
+	document.getElementById("Party4Name").value = currResults[3][0];
+	document.getElementById("Party4Votes").value = currResults[3][1];
+	document.getElementById("Party4VoteShare").value = Math.round((currResults[3][1] / totalVotesCurr * 100) * 10) / 10;
+	document.getElementById("Party4Swing").value = Math.round(((currResults[3][1] / totalVotesCurr * 100) - (prevResults[indexs[3]][1] / totalVotesPrev * 100)) * 10) / 10;
+	document.getElementById("Party4DirectSeats").value = currResults[3][2];
+	document.getElementById("Party4Seats").value = currResults[3][2] + currResults[3][3];
+	document.getElementById("Party4SeatChange").value = (currResults[3][2] + currResults[3][3]) - (prevResults[indexs[3]][2] + prevResults[indexs[3]][3]);
+	document.getElementById("Party4SeatShare").value = Math.round(((currResults[3][2] + currResults[3][3]) / totalSeats * 100) * 10) / 10;
+	
+	document.getElementById("Party5Name").value = currResults[4][0];
+	document.getElementById("Party5Votes").value = currResults[4][1];
+	document.getElementById("Party5VoteShare").value = Math.round((currResults[4][1] / totalVotesCurr * 100) * 10) / 10;
+	document.getElementById("Party5Swing").value = Math.round(((currResults[4][1] / totalVotesCurr * 100) - (prevResults[indexs[4]][1] / totalVotesPrev * 100)) * 10) / 10;
+	document.getElementById("Party5DirectSeats").value = currResults[4][2];
+	document.getElementById("Party5Seats").value = currResults[4][2] + currResults[4][3];
+	document.getElementById("Party5SeatChange").value = (currResults[4][2] + currResults[4][3]) - (prevResults[indexs[4]][2] + prevResults[indexs[4]][3]);
+	document.getElementById("Party5SeatShare").value = Math.round(((currResults[4][2] + currResults[4][3]) / totalSeats * 100) * 10) / 10;
+	
+	document.getElementById("Party6Name").value = currResults[5][0];
+	document.getElementById("Party6Votes").value = currResults[5][1];
+	document.getElementById("Party6VoteShare").value = Math.round((currResults[5][1] / totalVotesCurr * 100) * 10) / 10;
+	document.getElementById("Party6Swing").value = Math.round(((currResults[5][1] / totalVotesCurr * 100) - (prevResults[indexs[5]][1] / totalVotesPrev * 100)) * 10) / 10;
+	document.getElementById("Party6DirectSeats").value = currResults[5][2];
+	document.getElementById("Party6Seats").value = currResults[5][2] + currResults[5][3];
+	document.getElementById("Party6SeatChange").value = (currResults[5][2] + currResults[5][3]) - (prevResults[indexs[5]][2] + prevResults[indexs[5]][3]);
+	document.getElementById("Party6SeatShare").value = Math.round(((currResults[5][2] + currResults[5][3]) / totalSeats * 100) * 10) / 10;	
+
+}
 
 displayCurrentProjection();
 
-var states = L.geoJson(bundeslandData, {
-	style: styleStates,
-	onEachFeature: onEachFeatureStates
-}).addTo(map);
-
-var constituenciesSH = L.geoJson(constituenciesSH, {
-	style: styleConstituencies,
-	onEachFeature: onEachFeatureConstituencies
-});
-
-var constituenciesMV = L.geoJson(constituenciesMV, {
-	style: styleConstituencies,
-	onEachFeature: onEachFeatureConstituencies
-});
-
-var constituenciesHM = L.geoJson(constituenciesHM, {
-	style: styleConstituencies,
-	onEachFeature: onEachFeatureConstituencies
-});
-
-var constituenciesLS = L.geoJson(constituenciesLS, {
-	style: styleConstituencies,
-	onEachFeature: onEachFeatureConstituencies
-});
-
-var constituenciesBM = L.geoJson(constituenciesBM, {
-	style: styleConstituencies,
-	onEachFeature: onEachFeatureConstituencies
-});
-
-var constituenciesBB = L.geoJson(constituenciesBB, {
-	style: styleConstituencies,
-	onEachFeature: onEachFeatureConstituencies
-});
-
-var constituenciesST = L.geoJson(constituenciesST, {
-	style: styleConstituencies,
-	onEachFeature: onEachFeatureConstituencies
-});
-
-var constituenciesBE = L.geoJson(constituenciesBE, {
-	style: styleConstituencies,
-	onEachFeature: onEachFeatureConstituencies
-});
-
-var constituenciesNRW = L.geoJson(constituenciesNRW, {
-	style: styleConstituencies,
-	onEachFeature: onEachFeatureConstituencies
-});
-
-var constituenciesSA = L.geoJson(constituenciesSA, {
-	style: styleConstituencies,
-	onEachFeature: onEachFeatureConstituencies
-});
-
-var constituenciesHE = L.geoJson(constituenciesHE, {
-	style: styleConstituencies,
-	onEachFeature: onEachFeatureConstituencies
-});
-
-var constituenciesTH = L.geoJson(constituenciesTH, {
-	style: styleConstituencies,
-	onEachFeature: onEachFeatureConstituencies
-});
-
-var constituenciesRP = L.geoJson(constituenciesRP, {
-	style: styleConstituencies,
-	onEachFeature: onEachFeatureConstituencies
-});
-
-var constituenciesBY = L.geoJson(constituenciesBY, {
-	style: styleConstituencies,
-	onEachFeature: onEachFeatureConstituencies
-});
-
-var constituenciesBW = L.geoJson(constituenciesBW, {
-	style: styleConstituencies,
-	onEachFeature: onEachFeatureConstituencies
-});
-
-var constituenciesSL = L.geoJson(constituenciesSL, {
-	style: styleConstituencies,
-	onEachFeature: onEachFeatureConstituencies
-});
