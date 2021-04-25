@@ -525,7 +525,6 @@ function zoomToFeatureStatesToConstituencies(e) {
 	map.fitBounds(e.target.getBounds());
 	states.remove();
 	
-	var stateName = "Saxony";
 	
 	((e.target.feature.properties.Name == "Schleswig-Holstein") ?	map.addLayer(constituenciesSH)
 	: (e.target.feature.properties.Name == "Hamburg") ? map.addLayer(constituenciesHM)
@@ -545,16 +544,22 @@ function zoomToFeatureStatesToConstituencies(e) {
 	: map.addLayer(constituenciesTH))
 	
 	//Update Table
-	document.getElementById("ResultsTableTitle").value = "Saxony";
+	document.getElementById("ResultsTableTitle").value = e.target.feature.properties.Name;
 	
-	document.getElementById("Party1Name").value = prevCDUVoteShare;
-	document.getElementById("Party1Votes").value = prevSPDVoteShare;
-	document.getElementById("Party1VoteShare").value = prevAfDVoteShare;
-	document.getElementById("Party1Swing").value = prevFDPVoteShare;
-	document.getElementById("Party1DirectSeats").value = prevLeftVoteShare;
-	document.getElementById("Party1Seats").value = prevGreenVoteShare;
-	document.getElementById("Party1SeatChange").value = prevGreenVoteShare;
-	document.getElementById("Party1SeatShare").value = prevGreenVoteShare;
+	var totalVotes = 0, totalSeats = 0;
+	for (i = 0; i < currFederalResults.length; i++){
+		totalVotes = totalVotes + currFederalResults[0][1]
+		totalSeats = totalSeats + currFederalResults[0][2] + currFederalResults[0][3]
+	}
+	
+	document.getElementById("Party1Name").value = currFederalResults[0][0];
+	document.getElementById("Party1Votes").value = currFederalResults[0][1];
+	document.getElementById("Party1VoteShare").value = Math.round(((currFederalResults[0][1] / totalVotes * 100) * 10) / 10);
+	document.getElementById("Party1Swing").value = (currFederalResults[0][1] / totalVotes * 100) - (prevFederalResults[0][1] / totalVotes * 100);
+	document.getElementById("Party1DirectSeats").value = currFederalResults[0][2];
+	document.getElementById("Party1Seats").value = currFederalResults[0][2] + currFederalResults[0][3];
+	document.getElementById("Party1SeatChange").value = (currFederalResults[0][2] + currFederalResults[0][3]) - (prevFederalResults[0][2] + prevFederalResults[0][3]);
+	document.getElementById("Party1SeatShare").value = Math.round(((currFederalResults[0][2] + currFederalResults[0][3]) / totalSeats * 100) * 10) / 10;
 	
 }
 
@@ -643,7 +648,19 @@ function displayPopup(e) {
 
 }
 
-var federalResults;
+var prevFederalResults = [["CDU/CSU",15317344,231,15],
+	["SPD",9539381,59,94],
+	["AfD",5878115,3,91],
+	["FDP",4999449,0,80],
+	["The Left",4297270,5,64],
+	["Green",4158400,4,66]];
+
+var currFederalResults = [["CDU/CSU",8748451+2469688,182,45],
+	["SPD",6156471,59,94],
+	["AfD",5415256,16,67],
+	["FDP",5845125,0,90],
+	["The Left",3945481,3,61],
+	["Green",1051487,48,137]];
 
 displayCurrentProjection();
 
