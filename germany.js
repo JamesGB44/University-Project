@@ -20,629 +20,6 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 	id: 'mapbox/light-v9'
 }).addTo(map);
 
-function sortFunctionA(a, b) {
-	if (a[2] === b[2]) {
-		return 0;
-	}
-	else {
-		return (a[2] > b[2]) ? -1 : 1;
-	}
-}
-function sortFunctionB(a, b) {
-	if (a[3] === b[3]) {
-		return 0;
-	}
-	else {
-		return (a[3] > b[3]) ? -1 : 1;
-	}
-}	
-function sortFunctionC(a, b) {
-	if (a[0] === b[0]) {
-		return 0;
-	}
-	else {
-		return (a[0] < b[0]) ? -1 : 1;
-	}
-}
-
-function initialStateSainteLague(listOfResults, noOfSeats, initialisation){
-	
-	var cleanListOfResults = new Array(listOfResults.length);
-	for (var i = 0; i < listOfResults.length; i++) {
-		cleanListOfResults[i] = new Array(4); //Loop through depending on how many districts there are and create new fields.
-		cleanListOfResults[i][0] = listOfResults[i][0];
-		cleanListOfResults[i][1] = listOfResults[i][1];
-		cleanListOfResults[i][2] = 0;
-		cleanListOfResults[i][3] = listOfResults[i][4];;
-	}
-	
-	for (i = 0; i < noOfSeats; i++) {
-		cleanListOfResults.sort(sortFunctionB);
-		cleanListOfResults[0][2] = cleanListOfResults[0][2] + 1;
-		cleanListOfResults[0][3] = cleanListOfResults[0][1] / (1 + (2*cleanListOfResults[0][2]));
-	}
-	listOfResults.sort(sortFunctionC);
-	cleanListOfResults.sort(sortFunctionC);
-	
-
-	for (i = 0; i < listOfResults.length; i++) {
-		if (listOfResults[i][2] < cleanListOfResults[i][2]){
-			listOfResults[i][3] = (cleanListOfResults[i][2] - listOfResults[i][2]);
-		}
-		else {
-			listOfResults[i][3] = 0;
-		}
-		
-	}
-	if (initialisation){
-		prevFederalResults.sort(sortFunctionC);
-	
-		for (var i = 0; i < listOfResults.length; i++){
-			prevFederalResults[i][3] = prevFederalResults[i][3] + listOfResults[i][3];
-		}
-		
-	}
-	else {
-		currFederalResults.sort(sortFunctionC);
-	
-		for (var i = 0; i < listOfResults.length; i++){
-			currFederalResults[i][3] = currFederalResults[i][3] + listOfResults[i][3];
-		}
-	}
-		
-}
-
-function federalOverhangEqualisation(listOfFederalResults, BavarianResults) {
-	
-	var arrayOfLowerDivisors = new Array(listOfFederalResults.length);
-	var arrayOfHigherDivisors = new Array(listOfFederalResults.length);
-	var tempSeatsArray = new Array(listOfFederalResults.length);
-	listOfFederalResults.sort(sortFunctionC);
-	BavarianResults.sort(sortFunctionC);
-	
-	
-	newCDUVotes = listOfFederalResults[1][1] - BavarianResults[1][1];
-	newCDUSeats = ((listOfFederalResults[1][2] + listOfFederalResults[1][3]) - (BavarianResults[1][2] + BavarianResults[1][3]));
-	newCSUVotes = BavarianResults[1][1];
-	newCSUSeats = (BavarianResults[1][2] + BavarianResults[1][3]);
-	
-	
-	arrayOfLowerDivisors[0] = listOfFederalResults[0][1] / ((listOfFederalResults[0][2] + listOfFederalResults[0][3]) - 0.5);
-	arrayOfLowerDivisors[1] = listOfFederalResults[2][1] / ((listOfFederalResults[2][2] + listOfFederalResults[2][3]) - 0.5);
-	arrayOfLowerDivisors[2] = listOfFederalResults[3][1] / ((listOfFederalResults[3][2] + listOfFederalResults[3][3]) - 0.5);
-	arrayOfLowerDivisors[3] = listOfFederalResults[4][1] / ((listOfFederalResults[4][2] + listOfFederalResults[4][3]) - 0.5);
-	arrayOfLowerDivisors[4] = listOfFederalResults[5][1] / ((listOfFederalResults[5][2] + listOfFederalResults[5][3]) - 0.5);
-	arrayOfLowerDivisors[5] = newCDUVotes / (newCDUSeats - 0.5);
-	arrayOfLowerDivisors[6] = newCSUVotes / (newCSUSeats - 0.5);
-	
-	arrayOfLowerDivisors.sort();
-	
-	divisor1 = arrayOfLowerDivisors[0];
-	
-	for (var i = 0; i < listOfFederalResults.length + 1; i++){
-		tempSeatsArray[i] = new Array(2);
-	}
-	
-	tempSeatsArray[0][0] = listOfFederalResults[0][0];
-	newSeats = parseInt(Math.round(listOfFederalResults[0][1] / divisor1));
-	tempSeatsArray[0][1] = newSeats;
-	
-	tempSeatsArray[1][0] = listOfFederalResults[2][0];
-	newSeats = parseInt(Math.round(listOfFederalResults[2][1] / divisor1));
-	tempSeatsArray[1][1] = newSeats;
-	
-	tempSeatsArray[2][0] = listOfFederalResults[3][0];
-	newSeats = parseInt(Math.round(listOfFederalResults[3][1] / divisor1));
-	tempSeatsArray[2][1] = newSeats;
-	
-	tempSeatsArray[3][0] = listOfFederalResults[4][0];
-	newSeats = parseInt(Math.round(listOfFederalResults[4][1] / divisor1));
-	tempSeatsArray[3][1] = newSeats;
-	
-	tempSeatsArray[4][0] = listOfFederalResults[5][0];
-	newSeats = parseInt(Math.round(listOfFederalResults[5][1] / divisor1));
-	tempSeatsArray[4][1] = newSeats;
-	
-	tempSeatsArray[5][0] = "CDU";
-	newSeats = parseInt(Math.round(newCDUVotes / divisor1));
-	tempSeatsArray[5][1] = newSeats;
-	
-	tempSeatsArray[6][0] = "CSU";
-	newSeats = parseInt(Math.round(newCSUVotes / divisor1));
-	tempSeatsArray[6][1] = newSeats;
-
-	
-	
-	arrayOfHigherDivisors[0] = listOfFederalResults[0][1] / ((tempSeatsArray[0][1]) + 0.5);
-	arrayOfHigherDivisors[1] = listOfFederalResults[2][1] / ((tempSeatsArray[1][1]) + 0.5);
-	arrayOfHigherDivisors[2] = listOfFederalResults[3][1] / ((tempSeatsArray[2][1]) + 0.5);
-	arrayOfHigherDivisors[3] = listOfFederalResults[4][1] / ((tempSeatsArray[3][1]) + 0.5);
-	arrayOfHigherDivisors[4] = listOfFederalResults[5][1] / ((tempSeatsArray[4][1]) + 0.5);
-	arrayOfHigherDivisors[5] = newCDUVotes / (tempSeatsArray[5][1] + 0.5);
-	arrayOfHigherDivisors[6] = newCSUVotes / (tempSeatsArray[6][1] + 0.5);
-	
-	arrayOfHigherDivisors.sort();
-	
-	divisor2 = arrayOfHigherDivisors[6];
-	
-	finalDivisor = parseInt(Math.round((divisor1 + divisor2) / 2));
-	
-	CSUFederalSeats = BavarianResults[1][1] / finalDivisor;
-	CSUFederalSeats = Math.round(CSUFederalSeats);
-	CSUFederalSeats = parseInt(CSUFederalSeats);
-	
-	for (var i = 0; i < listOfFederalResults.length; i++){
-		newSeats = listOfFederalResults[i][1] / finalDivisor;
-		newSeats = Math.round(newSeats);
-		newSeats = parseInt(newSeats);
-		listOfFederalResults[i][3] = (newSeats - listOfFederalResults[i][2]);
-	}
-
-}
-
-function applyPartyStateDivisor(array, index, divisor, initialisation){
-	
-	if (initialisation){
-		prevResultsSH[index][3] = (parseInt(Math.round(prevResultsSH[index][1] / divisor)) > prevResultsSH[index][2]) ? parseInt(Math.round(prevResultsSH[index][1] / divisor)) - prevResultsSH[index][2] : 0;
-		prevResultsHM[index][3] = (parseInt(Math.round(prevResultsHM[index][1] / divisor)) > prevResultsHM[index][2]) ? parseInt(Math.round(prevResultsHM[index][1] / divisor)) - prevResultsHM[index][2] : 0;
-		prevResultsLS[index][3] = (parseInt(Math.round(prevResultsLS[index][1] / divisor)) > prevResultsLS[index][2]) ? parseInt(Math.round(prevResultsLS[index][1] / divisor)) - prevResultsLS[index][2] : 0;
-		prevResultsBM[index][3] = (parseInt(Math.round(prevResultsBM[index][1] / divisor)) > prevResultsBM[index][2]) ? parseInt(Math.round(prevResultsBM[index][1] / divisor)) - prevResultsBM[index][2] : 0;
-		prevResultsNRW[index][3] = (parseInt(Math.round(prevResultsNRW[index][1] / divisor)) > prevResultsNRW[index][2]) ? parseInt(Math.round(prevResultsNRW[index][1] / divisor)) - prevResultsNRW[index][2] : 0;
-		prevResultsHE[index][3] = (parseInt(Math.round(prevResultsHE[index][1] / divisor)) > prevResultsHE[index][2]) ? parseInt(Math.round(prevResultsHE[index][1] / divisor)) - prevResultsHE[index][2] : 0;
-		prevResultsRP[index][3] = (parseInt(Math.round(prevResultsRP[index][1] / divisor)) > prevResultsRP[index][2]) ? parseInt(Math.round(prevResultsRP[index][1] / divisor)) - prevResultsRP[index][2] : 0;
-		prevResultsBW[index][3] = (parseInt(Math.round(prevResultsBW[index][1] / divisor)) > prevResultsBW[index][2]) ? parseInt(Math.round(prevResultsBW[index][1] / divisor)) - prevResultsBW[index][2] : 0;
-		prevResultsBY[index][3] = (parseInt(Math.round(prevResultsBY[index][1] / divisor)) > prevResultsBY[index][2]) ? parseInt(Math.round(prevResultsBY[index][1] / divisor)) - prevResultsBY[index][2] : 0;
-		prevResultsSL[index][3] = (parseInt(Math.round(prevResultsSL[index][1] / divisor)) > prevResultsSL[index][2]) ? parseInt(Math.round(prevResultsSL[index][1] / divisor)) - prevResultsSL[index][2] : 0;
-		prevResultsBE[index][3] = (parseInt(Math.round(prevResultsBE[index][1] / divisor)) > prevResultsBE[index][2]) ? parseInt(Math.round(prevResultsBE[index][1] / divisor)) - prevResultsBE[index][2] : 0;
-		prevResultsBB[index][3] = (parseInt(Math.round(prevResultsBB[index][1] / divisor)) > prevResultsBB[index][2]) ? parseInt(Math.round(prevResultsBB[index][1] / divisor)) - prevResultsBB[index][2] : 0;
-		prevResultsMV[index][3] = (parseInt(Math.round(prevResultsMV[index][1] / divisor)) > prevResultsMV[index][2]) ? parseInt(Math.round(prevResultsMV[index][1] / divisor)) - prevResultsMV[index][2] : 0;
-		prevResultsSA[index][3] = (parseInt(Math.round(prevResultsSA[index][1] / divisor)) > prevResultsSA[index][2]) ? parseInt(Math.round(prevResultsSA[index][1] / divisor)) - prevResultsSA[index][2] : 0;
-		prevResultsST[index][3] = (parseInt(Math.round(prevResultsST[index][1] / divisor)) > prevResultsST[index][2]) ? parseInt(Math.round(prevResultsST[index][1] / divisor)) - prevResultsST[index][2] : 0;
-		prevResultsTH[index][3] = (parseInt(Math.round(prevResultsTH[index][1] / divisor)) > prevResultsTH[index][2]) ? parseInt(Math.round(prevResultsTH[index][1] / divisor)) - prevResultsTH[index][2] : 0;
-		
-	}
-	else {
-		currResultsSH[index][3] = (parseInt(Math.round(currResultsSH[index][1] / divisor)) > currResultsSH[index][2]) ? parseInt(Math.round(currResultsSH[index][1] / divisor)) - currResultsSH[index][2] : 0;
-		currResultsHM[index][3] = (parseInt(Math.round(currResultsHM[index][1] / divisor)) > currResultsHM[index][2]) ? parseInt(Math.round(currResultsHM[index][1] / divisor)) - currResultsHM[index][2] : 0;
-		currResultsLS[index][3] = (parseInt(Math.round(currResultsLS[index][1] / divisor)) > currResultsLS[index][2]) ? parseInt(Math.round(currResultsLS[index][1] / divisor)) - currResultsLS[index][2] : 0;
-		currResultsBM[index][3] = (parseInt(Math.round(currResultsBM[index][1] / divisor)) > currResultsBM[index][2]) ? parseInt(Math.round(currResultsBM[index][1] / divisor)) - currResultsBM[index][2] : 0;
-		currResultsNRW[index][3] = (parseInt(Math.round(currResultsNRW[index][1] / divisor)) > currResultsNRW[index][2]) ? parseInt(Math.round(currResultsNRW[index][1] / divisor)) - currResultsNRW[index][2] : 0;
-		currResultsHE[index][3] = (parseInt(Math.round(currResultsHE[index][1] / divisor)) > currResultsHE[index][2]) ? parseInt(Math.round(currResultsHE[index][1] / divisor)) - currResultsHE[index][2] : 0;
-		currResultsRP[index][3] = (parseInt(Math.round(currResultsRP[index][1] / divisor)) > currResultsRP[index][2]) ? parseInt(Math.round(currResultsRP[index][1] / divisor)) - currResultsRP[index][2] : 0;
-		currResultsBW[index][3] = (parseInt(Math.round(currResultsBW[index][1] / divisor)) > currResultsBW[index][2]) ? parseInt(Math.round(currResultsBW[index][1] / divisor)) - currResultsBW[index][2] : 0;
-		currResultsBY[index][3] = (parseInt(Math.round(currResultsBY[index][1] / divisor)) > currResultsBY[index][2]) ? parseInt(Math.round(currResultsBY[index][1] / divisor)) - currResultsBY[index][2] : 0;
-		currResultsSL[index][3] = (parseInt(Math.round(currResultsSL[index][1] / divisor)) > currResultsSL[index][2]) ? parseInt(Math.round(currResultsSL[index][1] / divisor)) - currResultsSL[index][2] : 0;
-		currResultsBE[index][3] = (parseInt(Math.round(currResultsBE[index][1] / divisor)) > currResultsBE[index][2]) ? parseInt(Math.round(currResultsBE[index][1] / divisor)) - currResultsBE[index][2] : 0;
-		currResultsBB[index][3] = (parseInt(Math.round(currResultsBB[index][1] / divisor)) > currResultsBB[index][2]) ? parseInt(Math.round(currResultsBB[index][1] / divisor)) - currResultsBB[index][2] : 0;
-		currResultsMV[index][3] = (parseInt(Math.round(currResultsMV[index][1] / divisor)) > currResultsMV[index][2]) ? parseInt(Math.round(currResultsMV[index][1] / divisor)) - currResultsMV[index][2] : 0;
-		currResultsSA[index][3] = (parseInt(Math.round(currResultsSA[index][1] / divisor)) > currResultsSA[index][2]) ? parseInt(Math.round(currResultsSA[index][1] / divisor)) - currResultsSA[index][2] : 0;
-		currResultsST[index][3] = (parseInt(Math.round(currResultsST[index][1] / divisor)) > currResultsST[index][2]) ? parseInt(Math.round(currResultsST[index][1] / divisor)) - currResultsST[index][2] : 0;
-		currResultsTH[index][3] = (parseInt(Math.round(currResultsTH[index][1] / divisor)) > currResultsTH[index][2]) ? parseInt(Math.round(currResultsTH[index][1] / divisor)) - currResultsTH[index][2] : 0;
-	}
-
-	
-	
-}
-
-function sainteLague(listOfResults, targetSeats, partyVotes){
-	
-	partySeats = 0;
-	divisor = parseInt(Math.round(partyVotes / targetSeats));
-	
-	while (partySeats != targetSeats)
-	{
-		partySeats = 0;
-		for (var i = 0; i < listOfResults.length; i++)
-		{
-			newSeats = parseInt(Math.round(listOfResults[i][1] / divisor));
-			if (listOfResults[i][2] > newSeats)
-			{
-				partySeats = partySeats + listOfResults[i][2];
-			}
-			else
-			{
-				partySeats = partySeats + newSeats;
-			}
-		}
-	
-		if (partySeats > targetSeats)
-		{
-			//divisor = increaseDivisor();
-			divisor = divisor + (divisor *0.01);
-		}
-		else if (partySeats < targetSeats)
-		{
-			//divisor = decreaseDivisor();
-			divisor = divisor - (divisor *0.01);
-		}	
-	
-	}
-	return divisor;
-	
-}
-
-function federalResultsToStateLevel(initialisation) {
-	
-	if (initialisation)
-	{
-		prevResultsSH.sort(sortFunctionC);
-		prevResultsHM.sort(sortFunctionC);
-		prevResultsLS.sort(sortFunctionC);
-		prevResultsBM.sort(sortFunctionC);
-		prevResultsNRW.sort(sortFunctionC);
-		prevResultsHE.sort(sortFunctionC);
-		prevResultsRP.sort(sortFunctionC);
-		prevResultsBW.sort(sortFunctionC);
-		prevResultsBY.sort(sortFunctionC);
-		prevResultsSL.sort(sortFunctionC);
-		prevResultsBE.sort(sortFunctionC);
-		prevResultsBB.sort(sortFunctionC);
-		prevResultsMV.sort(sortFunctionC);
-		prevResultsSA.sort(sortFunctionC);
-		prevResultsST.sort(sortFunctionC);
-		prevResultsTH.sort(sortFunctionC);
-		prevFederalResults.sort(sortFunctionC);
-		
-		console.log(prevResultsSH);
-		
-		var AfDArray  = [["SH",prevResultsSH[0][1], prevResultsSH[0][2]],
-					["HM",prevResultsHM[0][1], prevResultsHM[0][2]],
-					["LS",prevResultsLS[0][1], prevResultsLS[0][2]],
-					["BM",prevResultsBM[0][1], prevResultsBM[0][2]],
-					["NRW",prevResultsNRW[0][1], prevResultsNRW[0][2]],
-					["HE",prevResultsHE[0][1], prevResultsHE[0][2]],
-					["RP",prevResultsRP[0][1], prevResultsRP[0][2]],
-					["BW",prevResultsBW[0][1], prevResultsBW[0][2]],
-					["BY",prevResultsBY[0][1], prevResultsBY[0][2]],
-					["SL",prevResultsSL[0][1], prevResultsSL[0][2]],
-					["BE",prevResultsBE[0][1], prevResultsBE[0][2]],
-					["BB",prevResultsBB[0][1], prevResultsBB[0][2]],
-					["MV",prevResultsMV[0][1], prevResultsMV[0][2]],
-					["SA",prevResultsSA[0][1], prevResultsSA[0][2]],
-					["ST",prevResultsST[0][1], prevResultsST[0][2]],
-					["TH",prevResultsTH[0][1], prevResultsTH[0][2]]];
-					
-		var CDUArray  = [["SH",prevResultsSH[1][1], prevResultsSH[1][2]],
-					["HM",prevResultsHM[1][1], prevResultsHM[1][2]],
-					["LS",prevResultsLS[1][1], prevResultsLS[1][2]],
-					["BM",prevResultsBM[1][1], prevResultsBM[1][2]],
-					["NRW",prevResultsNRW[1][1], prevResultsNRW[1][2]],
-					["HE",prevResultsHE[1][1], prevResultsHE[1][2]],
-					["RP",prevResultsRP[1][1], prevResultsRP[1][2]],
-					["BW",prevResultsBW[1][1], prevResultsBW[1][2]],
-					["SL",prevResultsSL[1][1], prevResultsSL[1][2]],
-					["BE",prevResultsBE[1][1], prevResultsBE[1][2]],
-					["BB",prevResultsBB[1][1], prevResultsBB[1][2]],
-					["MV",prevResultsMV[1][1], prevResultsMV[1][2]],
-					["SA",prevResultsSA[1][1], prevResultsSA[1][2]],
-					["ST",prevResultsST[1][1], prevResultsST[1][2]],
-					["TH",prevResultsTH[1][1], prevResultsTH[1][2]]];
-		
-		var FDPArray  = [["SH",prevResultsSH[2][1], prevResultsSH[2][2]],
-					["HM",prevResultsHM[2][1], prevResultsHM[2][2]],
-					["LS",prevResultsLS[2][1], prevResultsLS[2][2]],
-					["BM",prevResultsBM[2][1], prevResultsBM[2][2]],
-					["NRW",prevResultsNRW[2][1], prevResultsNRW[2][2]],
-					["HE",prevResultsHE[2][1], prevResultsHE[2][2]],
-					["RP",prevResultsRP[2][1], prevResultsRP[2][2]],
-					["BW",prevResultsBW[2][1], prevResultsBW[2][2]],
-					["BY",prevResultsBY[2][1], prevResultsBY[2][2]],
-					["SL",prevResultsSL[2][1], prevResultsSL[2][2]],
-					["BE",prevResultsBE[2][1], prevResultsBE[2][2]],
-					["BB",prevResultsBB[2][1], prevResultsBB[2][2]],
-					["MV",prevResultsMV[2][1], prevResultsMV[2][2]],
-					["SA",prevResultsSA[2][1], prevResultsSA[2][2]],
-					["ST",prevResultsST[2][1], prevResultsST[2][2]],
-					["TH",prevResultsTH[2][1], prevResultsTH[2][2]]];
-					
-		var GreenArray  = [["SH",prevResultsSH[3][1], prevResultsSH[3][2]],
-					["HM",prevResultsHM[3][1], prevResultsHM[3][2]],
-					["LS",prevResultsLS[3][1], prevResultsLS[3][2]],
-					["BM",prevResultsBM[3][1], prevResultsBM[3][2]],
-					["NRW",prevResultsNRW[3][1], prevResultsNRW[3][2]],
-					["HE",prevResultsHE[3][1], prevResultsHE[3][2]],
-					["RP",prevResultsRP[3][1], prevResultsRP[3][2]],
-					["BW",prevResultsBW[3][1], prevResultsBW[3][2]],
-					["BY",prevResultsBY[3][1], prevResultsBY[3][2]],
-					["SL",prevResultsSL[3][1], prevResultsSL[3][2]],
-					["BE",prevResultsBE[3][1], prevResultsBE[3][2]],
-					["BB",prevResultsBB[3][1], prevResultsBB[3][2]],
-					["MV",prevResultsMV[3][1], prevResultsMV[3][2]],
-					["SA",prevResultsSA[3][1], prevResultsSA[3][2]],
-					["ST",prevResultsST[3][1], prevResultsST[3][2]],
-					["TH",prevResultsTH[3][1], prevResultsTH[3][2]]];
-		
-		var SPDArray  = [["SH",prevResultsSH[4][1], prevResultsSH[4][2]],
-					["HM",prevResultsHM[4][1], prevResultsHM[4][2]],
-					["LS",prevResultsLS[4][1], prevResultsLS[4][2]],
-					["BM",prevResultsBM[4][1], prevResultsBM[4][2]],
-					["NRW",prevResultsNRW[4][1], prevResultsNRW[4][2]],
-					["HE",prevResultsHE[4][1], prevResultsHE[4][2]],
-					["RP",prevResultsRP[4][1], prevResultsRP[4][2]],
-					["BW",prevResultsBW[4][1], prevResultsBW[4][2]],
-					["BY",prevResultsBY[4][1], prevResultsBY[4][2]],
-					["SL",prevResultsSL[4][1], prevResultsSL[4][2]],
-					["BE",prevResultsBE[4][1], prevResultsBE[4][2]],
-					["BB",prevResultsBB[4][1], prevResultsBB[4][2]],
-					["MV",prevResultsMV[4][1], prevResultsMV[4][2]],
-					["SA",prevResultsSA[4][1], prevResultsSA[4][2]],
-					["ST",prevResultsST[4][1], prevResultsST[4][2]],
-					["TH",prevResultsTH[4][1], prevResultsTH[4][2]]];
-					
-		var LeftArray  = [["SH",prevResultsSH[5][1], prevResultsSH[5][2]],
-					["HM",prevResultsHM[5][1], prevResultsHM[5][2]],
-					["LS",prevResultsLS[5][1], prevResultsLS[5][2]],
-					["BM",prevResultsBM[5][1], prevResultsBM[5][2]],
-					["NRW",prevResultsNRW[5][1], prevResultsNRW[5][2]],
-					["HE",prevResultsHE[5][1], prevResultsHE[5][2]],
-					["RP",prevResultsRP[5][1], prevResultsRP[5][2]],
-					["BW",prevResultsBW[5][1], prevResultsBW[5][2]],
-					["BY",prevResultsBY[5][1], prevResultsBY[5][2]],
-					["SL",prevResultsSL[5][1], prevResultsSL[5][2]],
-					["BE",prevResultsBE[5][1], prevResultsBE[5][2]],
-					["BB",prevResultsBB[5][1], prevResultsBB[5][2]],
-					["MV",prevResultsMV[5][1], prevResultsMV[5][2]],
-					["SA",prevResultsSA[5][1], prevResultsSA[5][2]],
-					["ST",prevResultsST[5][1], prevResultsST[5][2]],
-					["TH",prevResultsTH[5][1], prevResultsTH[5][2]]];
-		
-		var CSUArray  = ["BY",prevResultsBY[1][1], prevResultsBY[1][2]];
-
-
-
-		var divisorArray = [sainteLague(AfDArray, (prevFederalResults[0][2] + prevFederalResults[0][3]), prevFederalResults[0][1]),
-		sainteLague(CDUArray, ((prevFederalResults[1][2] + prevFederalResults[1][3]) - CSUFederalSeats), prevFederalResults[1][1] - prevResultsBY[1][1]),
-		sainteLague(FDPArray, (prevFederalResults[2][2] + prevFederalResults[2][3]), prevFederalResults[2][1]),
-		sainteLague(GreenArray, (prevFederalResults[3][2] + prevFederalResults[3][3]), prevFederalResults[3][1]),
-		sainteLague(SPDArray, (prevFederalResults[4][2] + prevFederalResults[4][3]), prevFederalResults[4][1]),
-		sainteLague(LeftArray, (prevFederalResults[5][2] + prevFederalResults[5][3]), prevFederalResults[5][1])];
-		
-		var CSUDivisor = parseInt(Math.round(prevResultsBY[1][1] / CSUFederalSeats));
-		
-		
-		for (var i = 0; i < divisorArray.length; i++){
-			applyPartyStateDivisor(prevResultsSH, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(prevResultsHM, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(prevResultsLS, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(prevResultsBM, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(prevResultsNRW, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(prevResultsHE, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(prevResultsRP, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(prevResultsBW, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(prevResultsBY, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(prevResultsSL, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(prevResultsBE, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(prevResultsBB, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(prevResultsMV, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(prevResultsSA, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(prevResultsST, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(prevResultsTH, i, divisorArray[i], initialisation);	
-			
-		}
-		
-		prevResultsBY[1][3] = (parseInt(Math.round(prevResultsBY[1][1] / CSUDivisor)) > prevResultsBY[1][2]) ? parseInt(Math.round(prevResultsBY[1][1] / CSUDivisor)) - prevResultsBY[1][2] : 0;		
-		
-	}
-	else
-	{
-		currResultsSH.sort(sortFunctionC);
-		currResultsHM.sort(sortFunctionC);
-		currResultsLS.sort(sortFunctionC);
-		currResultsBM.sort(sortFunctionC);
-		currResultsNRW.sort(sortFunctionC);
-		currResultsHE.sort(sortFunctionC);
-		currResultsRP.sort(sortFunctionC);
-		currResultsBW.sort(sortFunctionC);
-		currResultsBY.sort(sortFunctionC);
-		currResultsSL.sort(sortFunctionC);
-		currResultsBE.sort(sortFunctionC);
-		currResultsBB.sort(sortFunctionC);
-		currResultsMV.sort(sortFunctionC);
-		currResultsSA.sort(sortFunctionC);
-		currResultsST.sort(sortFunctionC);
-		currResultsTH.sort(sortFunctionC);
-		currFederalResults.sort(sortFunctionC);
-		
-		console.log(currResultsSH);
-		
-		var AfDArray  = [["SH",currResultsSH[0][1], currResultsSH[0][2]],
-					["HM",currResultsHM[0][1], currResultsHM[0][2]],
-					["LS",currResultsLS[0][1], currResultsLS[0][2]],
-					["BM",currResultsBM[0][1], currResultsBM[0][2]],
-					["NRW",currResultsNRW[0][1], currResultsNRW[0][2]],
-					["HE",currResultsHE[0][1], currResultsHE[0][2]],
-					["RP",currResultsRP[0][1], currResultsRP[0][2]],
-					["BW",currResultsBW[0][1], currResultsBW[0][2]],
-					["BY",currResultsBY[0][1], currResultsBY[0][2]],
-					["SL",currResultsSL[0][1], currResultsSL[0][2]],
-					["BE",currResultsBE[0][1], currResultsBE[0][2]],
-					["BB",currResultsBB[0][1], currResultsBB[0][2]],
-					["MV",currResultsMV[0][1], currResultsMV[0][2]],
-					["SA",currResultsSA[0][1], currResultsSA[0][2]],
-					["ST",currResultsST[0][1], currResultsST[0][2]],
-					["TH",currResultsTH[0][1], currResultsTH[0][2]]];
-					
-		var CDUArray  = [["SH",currResultsSH[1][1], currResultsSH[1][2]],
-					["HM",currResultsHM[1][1], currResultsHM[1][2]],
-					["LS",currResultsLS[1][1], currResultsLS[1][2]],
-					["BM",currResultsBM[1][1], currResultsBM[1][2]],
-					["NRW",currResultsNRW[1][1], currResultsNRW[1][2]],
-					["HE",currResultsHE[1][1], currResultsHE[1][2]],
-					["RP",currResultsRP[1][1], currResultsRP[1][2]],
-					["BW",currResultsBW[1][1], currResultsBW[1][2]],
-					["SL",currResultsSL[1][1], currResultsSL[1][2]],
-					["BE",currResultsBE[1][1], currResultsBE[1][2]],
-					["BB",currResultsBB[1][1], currResultsBB[1][2]],
-					["MV",currResultsMV[1][1], currResultsMV[1][2]],
-					["SA",currResultsSA[1][1], currResultsSA[1][2]],
-					["ST",currResultsST[1][1], currResultsST[1][2]],
-					["TH",currResultsTH[1][1], currResultsTH[1][2]]];
-		
-		var FDPArray  = [["SH",currResultsSH[2][1], currResultsSH[2][2]],
-					["HM",currResultsHM[2][1], currResultsHM[2][2]],
-					["LS",currResultsLS[2][1], currResultsLS[2][2]],
-					["BM",currResultsBM[2][1], currResultsBM[2][2]],
-					["NRW",currResultsNRW[2][1], currResultsNRW[2][2]],
-					["HE",currResultsHE[2][1], currResultsHE[2][2]],
-					["RP",currResultsRP[2][1], currResultsRP[2][2]],
-					["BW",currResultsBW[2][1], currResultsBW[2][2]],
-					["BY",currResultsBY[2][1], currResultsBY[2][2]],
-					["SL",currResultsSL[2][1], currResultsSL[2][2]],
-					["BE",currResultsBE[2][1], currResultsBE[2][2]],
-					["BB",currResultsBB[2][1], currResultsBB[2][2]],
-					["MV",currResultsMV[2][1], currResultsMV[2][2]],
-					["SA",currResultsSA[2][1], currResultsSA[2][2]],
-					["ST",currResultsST[2][1], currResultsST[2][2]],
-					["TH",currResultsTH[2][1], currResultsTH[2][2]]];
-					
-		var GreenArray  = [["SH",currResultsSH[3][1], currResultsSH[3][2]],
-					["HM",currResultsHM[3][1], currResultsHM[3][2]],
-					["LS",currResultsLS[3][1], currResultsLS[3][2]],
-					["BM",currResultsBM[3][1], currResultsBM[3][2]],
-					["NRW",currResultsNRW[3][1], currResultsNRW[3][2]],
-					["HE",currResultsHE[3][1], currResultsHE[3][2]],
-					["RP",currResultsRP[3][1], currResultsRP[3][2]],
-					["BW",currResultsBW[3][1], currResultsBW[3][2]],
-					["BY",currResultsBY[3][1], currResultsBY[3][2]],
-					["SL",currResultsSL[3][1], currResultsSL[3][2]],
-					["BE",currResultsBE[3][1], currResultsBE[3][2]],
-					["BB",currResultsBB[3][1], currResultsBB[3][2]],
-					["MV",currResultsMV[3][1], currResultsMV[3][2]],
-					["SA",currResultsSA[3][1], currResultsSA[3][2]],
-					["ST",currResultsST[3][1], currResultsST[3][2]],
-					["TH",currResultsTH[3][1], currResultsTH[3][2]]];
-		
-		var SPDArray  = [["SH",currResultsSH[4][1], currResultsSH[4][2]],
-					["HM",currResultsHM[4][1], currResultsHM[4][2]],
-					["LS",currResultsLS[4][1], currResultsLS[4][2]],
-					["BM",currResultsBM[4][1], currResultsBM[4][2]],
-					["NRW",currResultsNRW[4][1], currResultsNRW[4][2]],
-					["HE",currResultsHE[4][1], currResultsHE[4][2]],
-					["RP",currResultsRP[4][1], currResultsRP[4][2]],
-					["BW",currResultsBW[4][1], currResultsBW[4][2]],
-					["BY",currResultsBY[4][1], currResultsBY[4][2]],
-					["SL",currResultsSL[4][1], currResultsSL[4][2]],
-					["BE",currResultsBE[4][1], currResultsBE[4][2]],
-					["BB",currResultsBB[4][1], currResultsBB[4][2]],
-					["MV",currResultsMV[4][1], currResultsMV[4][2]],
-					["SA",currResultsSA[4][1], currResultsSA[4][2]],
-					["ST",currResultsST[4][1], currResultsST[4][2]],
-					["TH",currResultsTH[4][1], currResultsTH[4][2]]];
-					
-		var LeftArray  = [["SH",currResultsSH[5][1], currResultsSH[5][2]],
-					["HM",currResultsHM[5][1], currResultsHM[5][2]],
-					["LS",currResultsLS[5][1], currResultsLS[5][2]],
-					["BM",currResultsBM[5][1], currResultsBM[5][2]],
-					["NRW",currResultsNRW[5][1], currResultsNRW[5][2]],
-					["HE",currResultsHE[5][1], currResultsHE[5][2]],
-					["RP",currResultsRP[5][1], currResultsRP[5][2]],
-					["BW",currResultsBW[5][1], currResultsBW[5][2]],
-					["BY",currResultsBY[5][1], currResultsBY[5][2]],
-					["SL",currResultsSL[5][1], currResultsSL[5][2]],
-					["BE",currResultsBE[5][1], currResultsBE[5][2]],
-					["BB",currResultsBB[5][1], currResultsBB[5][2]],
-					["MV",currResultsMV[5][1], currResultsMV[5][2]],
-					["SA",currResultsSA[5][1], currResultsSA[5][2]],
-					["ST",currResultsST[5][1], currResultsST[5][2]],
-					["TH",currResultsTH[5][1], currResultsTH[5][2]]];
-		
-		var CSUArray  = ["BY",currResultsBY[1][1], currResultsBY[1][2]];
-
-
-
-		var divisorArray = [sainteLague(AfDArray, (currFederalResults[0][2] + currFederalResults[0][3]), currFederalResults[0][1]),
-		sainteLague(CDUArray, ((currFederalResults[1][2] + currFederalResults[1][3]) - CSUFederalSeats), currFederalResults[1][1] - currResultsBY[1][1]),
-		sainteLague(FDPArray, (currFederalResults[2][2] + currFederalResults[2][3]), currFederalResults[2][1]),
-		sainteLague(GreenArray, (currFederalResults[3][2] + currFederalResults[3][3]), currFederalResults[3][1]),
-		sainteLague(SPDArray, (currFederalResults[4][2] + currFederalResults[4][3]), currFederalResults[4][1]),
-		sainteLague(LeftArray, (currFederalResults[5][2] + currFederalResults[5][3]), currFederalResults[5][1])];
-		
-		var CSUDivisor = parseInt(Math.round(currResultsBY[1][1] / CSUFederalSeats));
-		
-		
-		for (var i = 0; i < divisorArray.length; i++){
-			applyPartyStateDivisor(currResultsSH, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(currResultsHM, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(currResultsLS, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(currResultsBM, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(currResultsNRW, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(currResultsHE, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(currResultsRP, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(currResultsBW, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(currResultsBY, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(currResultsSL, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(currResultsBE, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(currResultsBB, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(currResultsMV, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(currResultsSA, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(currResultsST, i, divisorArray[i], initialisation);
-			applyPartyStateDivisor(currResultsTH, i, divisorArray[i], initialisation);	
-			
-		}
-		
-		currResultsBY[1][3] = (parseInt(Math.round(currResultsBY[1][1] / CSUDivisor)) > currResultsBY[1][2]) ? parseInt(Math.round(currResultsBY[1][1] / CSUDivisor)) - currResultsBY[1][2] : 0;
-		
-	}
-	
-	
-}
-
-
-function seatCalculation(initialisation) {
-	
-	if (initialisation){
-		states.eachLayer(function(currentLayer){
-			((currentLayer.feature.properties.Name == "Schleswig-Holstein") ? initialStateSainteLague(prevResultsSH, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Hamburg") ? initialStateSainteLague(prevResultsHM, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Lower Saxony") ? initialStateSainteLague(prevResultsLS, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Bremen") ? initialStateSainteLague(prevResultsBM, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "North Rhine-Westphalia") ? initialStateSainteLague(prevResultsNRW, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Hesse") ? initialStateSainteLague(prevResultsHE, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Rheinland-Palatinate") ? initialStateSainteLague(prevResultsRP, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Baden-Wurttemberg") ? initialStateSainteLague(prevResultsBW, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Bavaria") ? initialStateSainteLague(prevResultsBY, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Saarland") ? initialStateSainteLague(prevResultsSL, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Berlin") ? initialStateSainteLague(prevResultsBE, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Brandenburg") ? initialStateSainteLague(prevResultsBB, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Mecklenburg-Vorpommern") ? initialStateSainteLague(prevResultsMV, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Saxony") ? initialStateSainteLague(prevResultsSA, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Saxony-Anhalt") ? initialStateSainteLague(prevResultsST, currentLayer.feature.properties.StateSeats, initialisation)
-			: initialStateSainteLague(prevResultsTH, currentLayer.feature.properties.StateSeats, initialisation));
-		});
-		
-		federalOverhangEqualisation(prevFederalResults, prevResultsBY);
-		federalResultsToStateLevel(initialisation);
-		
-	}
-	else {
-		states.eachLayer(function(currentLayer){
-			((currentLayer.feature.properties.Name == "Schleswig-Holstein") ? initialStateSainteLague(currResultsSH, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Hamburg") ? initialStateSainteLague(currResultsHM, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Lower Saxony") ? initialStateSainteLague(currResultsLS, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Bremen") ? initialStateSainteLague(currResultsBM, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "North Rhine-Westphalia") ? initialStateSainteLague(currResultsNRW, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Hesse") ? initialStateSainteLague(currResultsHE, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Rheinland-Palatinate") ? initialStateSainteLague(currResultsRP, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Baden-Wurttemberg") ? initialStateSainteLague(currResultsBW, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Bavaria") ? initialStateSainteLague(currResultsBY, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Saarland") ? initialStateSainteLague(currResultsSL, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Berlin") ? initialStateSainteLague(currResultsBE, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Brandenburg") ? initialStateSainteLague(currResultsBB, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Mecklenburg-Vorpommern") ? initialStateSainteLague(currResultsMV, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Saxony") ? initialStateSainteLague(currResultsSA, currentLayer.feature.properties.StateSeats, initialisation)
-			: (currentLayer.feature.properties.Name == "Saxony-Anhalt") ? initialStateSainteLague(currResultsST, currentLayer.feature.properties.StateSeats, initialisation)
-			: initialStateSainteLague(currResultsTH, currentLayer.feature.properties.StateSeats, initialisation));
-		});
-		
-		federalOverhangEqualisation(currFederalResults, currResultsBY);
-		federalResultsToStateLevel(initialisation);
-	}
-	
-	
-}
-
-
-
 
 prevSPDVoteShare = 20.5;
 prevCDUVoteShare = 32.9;
@@ -783,7 +160,743 @@ currResultsSL = fillStateArrays(constituenciesSL, false, false);
 
 var currFederalResults;
 prevFederalResults = fillFederalArray();
+
+var CDUThreshold = true, SPDThreshold = true, AfDThreshold = true, FDPThreshold = true, GreenThreshold = true, LeftThreshold = true;
 seatCalculation(true); 
+
+function sortFunctionA(a, b) {
+	if (a[2] === b[2]) {
+		return 0;
+	}
+	else {
+		return (a[2] > b[2]) ? -1 : 1;
+	}
+}
+function sortFunctionB(a, b) {
+	if (a[3] === b[3]) {
+		return 0;
+	}
+	else {
+		return (a[3] > b[3]) ? -1 : 1;
+	}
+}	
+function sortFunctionC(a, b) {
+	if (a[0] === b[0]) {
+		return 0;
+	}
+	else {
+		return (a[0] < b[0]) ? -1 : 1;
+	}
+}
+
+function initialStateSainteLague(listOfResults, noOfSeats, initialisation){
+	
+	var cleanListOfResults = new Array(listOfResults.length);
+	for (var i = 0; i < listOfResults.length; i++) {
+		cleanListOfResults[i] = new Array(4); //Loop through depending on how many districts there are and create new fields.
+		cleanListOfResults[i][0] = listOfResults[i][0];
+		cleanListOfResults[i][1] = listOfResults[i][1];
+		cleanListOfResults[i][2] = 0;
+		cleanListOfResults[i][3] = listOfResults[i][4];;
+	}
+	
+	for (i = 0; i < noOfSeats; i++) {
+		cleanListOfResults.sort(sortFunctionB);
+		cleanListOfResults[0][2] = cleanListOfResults[0][2] + 1;
+		cleanListOfResults[0][3] = cleanListOfResults[0][1] / (1 + (2*cleanListOfResults[0][2]));
+	}
+	listOfResults.sort(sortFunctionC);
+	cleanListOfResults.sort(sortFunctionC);
+	
+
+	for (i = 0; i < listOfResults.length; i++) {
+		if (listOfResults[i][2] < cleanListOfResults[i][2]){
+			listOfResults[i][3] = (cleanListOfResults[i][2] - listOfResults[i][2]);
+		}
+		else {
+			listOfResults[i][3] = 0;
+		}
+		
+	}
+	if (initialisation){
+		prevFederalResults.sort(sortFunctionC);
+	
+		for (var i = 0; i < listOfResults.length; i++){
+			prevFederalResults[i][3] = prevFederalResults[i][3] + listOfResults[i][3];
+		}
+		
+	}
+	else {
+		currFederalResults.sort(sortFunctionC);
+	
+		for (var i = 0; i < listOfResults.length; i++){
+			currFederalResults[i][3] = currFederalResults[i][3] + listOfResults[i][3];
+		}
+	}
+		
+}
+
+function federalOverhangEqualisation(listOfFederalResults, BavarianResults) {
+	
+	var arrayOfLowerDivisors = new Array(listOfFederalResults.length);
+	var arrayOfHigherDivisors = new Array(listOfFederalResults.length);
+	var tempSeatsArray = new Array(listOfFederalResults.length);
+	listOfFederalResults.sort(sortFunctionC);
+	BavarianResults.sort(sortFunctionC);
+	
+	
+	newCDUVotes = listOfFederalResults[1][1] - BavarianResults[1][1];
+	newCDUSeats = ((listOfFederalResults[1][2] + listOfFederalResults[1][3]) - (BavarianResults[1][2] + BavarianResults[1][3]));
+	newCSUVotes = BavarianResults[1][1];
+	newCSUSeats = (BavarianResults[1][2] + BavarianResults[1][3]);
+	
+
+	
+	if (AfDThreshold){
+		arrayOfLowerDivisors[0] = listOfFederalResults[0][1] / ((listOfFederalResults[0][2] + listOfFederalResults[0][3]) - 0.5);
+	}
+	else {
+		arrayOfLowerDivisors[0] = 99999999999;
+	}
+	if (FDPThreshold){
+		arrayOfLowerDivisors[1] = listOfFederalResults[2][1] / ((listOfFederalResults[2][2] + listOfFederalResults[2][3]) - 0.5);
+	}
+	else {
+		arrayOfLowerDivisors[1] = 99999999999;
+	}
+	if (GreenThreshold){
+		arrayOfLowerDivisors[2] = listOfFederalResults[3][1] / ((listOfFederalResults[3][2] + listOfFederalResults[3][3]) - 0.5);
+	}
+	else {
+		arrayOfLowerDivisors[2] = 99999999999;
+	}
+	if (SPDThreshold){
+		arrayOfLowerDivisors[3] = listOfFederalResults[4][1] / ((listOfFederalResults[4][2] + listOfFederalResults[4][3]) - 0.5);
+	}
+	else {
+		arrayOfLowerDivisors[3] = 99999999999;
+	}
+	if (LeftThreshold){
+		arrayOfLowerDivisors[4] = listOfFederalResults[5][1] / ((listOfFederalResults[5][2] + listOfFederalResults[5][3]) - 0.5);
+	}
+	else {
+		arrayOfLowerDivisors[4] = 99999999999;
+	}
+	if (CDUThreshold){
+		arrayOfLowerDivisors[5] = newCDUVotes / (newCDUSeats - 0.5);
+		arrayOfLowerDivisors[6] = newCSUVotes / (newCSUSeats - 0.5);
+	}
+	else{
+		arrayOfLowerDivisors[5] = 99999999999;
+		arrayOfLowerDivisors[6] = 99999999999;
+	}
+	
+	
+	
+	arrayOfLowerDivisors.sort();
+	
+	divisor1 = arrayOfLowerDivisors[0];
+	
+	for (var i = 0; i < listOfFederalResults.length + 1; i++){
+		tempSeatsArray[i] = new Array(2);
+	}
+	
+	tempSeatsArray[0][0] = listOfFederalResults[0][0];
+	newSeats = parseInt(Math.round(listOfFederalResults[0][1] / divisor1));
+	(AfDThreshold) ? tempSeatsArray[0][1] = newSeats : tempSeatsArray[0][1] = 0;
+	
+	tempSeatsArray[1][0] = listOfFederalResults[2][0];
+	newSeats = parseInt(Math.round(listOfFederalResults[2][1] / divisor1));
+	(FDPThreshold) ? tempSeatsArray[1][1] = newSeats : tempSeatsArray[1][1] = 0;
+	
+	tempSeatsArray[2][0] = listOfFederalResults[3][0];
+	newSeats = parseInt(Math.round(listOfFederalResults[3][1] / divisor1));
+	(GreenThreshold) ? tempSeatsArray[2][1] = newSeats : tempSeatsArray[2][1] = 0;
+	
+	tempSeatsArray[3][0] = listOfFederalResults[4][0];
+	newSeats = parseInt(Math.round(listOfFederalResults[4][1] / divisor1));
+	(SPDThreshold) ? tempSeatsArray[3][1] = newSeats : tempSeatsArray[3][1] = 0;
+	
+	tempSeatsArray[4][0] = listOfFederalResults[5][0];
+	newSeats = parseInt(Math.round(listOfFederalResults[5][1] / divisor1));
+	(LeftThreshold) ? tempSeatsArray[4][1] = newSeats : tempSeatsArray[4][1] = 0;
+	
+	tempSeatsArray[5][0] = "CDU";
+	newSeats = parseInt(Math.round(newCDUVotes / divisor1));
+	(CDUThreshold) ? tempSeatsArray[5][1] = newSeats : tempSeatsArray[5][1] = 0;
+	
+	tempSeatsArray[6][0] = "CSU";
+	newSeats = parseInt(Math.round(newCSUVotes / divisor1));
+	(CDUThreshold) ? tempSeatsArray[6][1] = newSeats : tempSeatsArray[6][1] = 0;
+
+	
+	if (AfDThreshold){
+		arrayOfHigherDivisors[0] = listOfFederalResults[0][1] / ((tempSeatsArray[0][1]) + 0.5);
+	}
+	else {
+		arrayOfHigherDivisors[0] = 0;
+	}
+	if (FDPThreshold){
+		arrayOfHigherDivisors[1] = listOfFederalResults[2][1] / ((tempSeatsArray[1][1]) + 0.5);
+	}
+	else {
+		arrayOfHigherDivisors[1] = 0;
+	}
+	if (GreenThreshold){
+		arrayOfHigherDivisors[2] = listOfFederalResults[3][1] / ((tempSeatsArray[2][1]) + 0.5);
+	}
+	else {
+		arrayOfHigherDivisors[2] = 0;
+	}
+	if (SPDThreshold){
+		arrayOfHigherDivisors[3] = listOfFederalResults[4][1] / ((tempSeatsArray[3][1]) + 0.5);
+	}
+	else {
+		arrayOfHigherDivisors[3] = 0;
+	}
+	if (LeftThreshold){
+		arrayOfHigherDivisors[4] = listOfFederalResults[5][1] / ((tempSeatsArray[4][1]) + 0.5);
+	}
+	else {
+		arrayOfHigherDivisors[4] = 0;
+	}
+	if (CDUThreshold){
+		arrayOfHigherDivisors[5] = newCDUVotes / (tempSeatsArray[5][1] + 0.5);
+		arrayOfHigherDivisors[6] = newCSUVotes / (tempSeatsArray[6][1] + 0.5);
+	}
+	else{
+		arrayOfHigherDivisors[5] = 0;
+		arrayOfHigherDivisors[6] = 0;
+	}
+	
+	arrayOfHigherDivisors.sort();
+	
+	console.log(arrayOfLowerDivisors);
+	console.log(arrayOfHigherDivisors);
+	
+	divisor2 = arrayOfHigherDivisors[6];
+	
+	finalDivisor = parseInt(Math.round((divisor1 + divisor2) / 2));
+	
+	console.log(listOfFederalResults);
+	
+	if (CDUThreshold){
+		CSUFederalSeats = BavarianResults[1][1] / finalDivisor;
+		CSUFederalSeats = Math.round(CSUFederalSeats);
+		CSUFederalSeats = parseInt(CSUFederalSeats);	
+	}
+	else{
+		CSUFederalSeats = 0;
+	}
+	
+
+	if (AfDThreshold){
+		console.log("A");
+		newSeats = listOfFederalResults[0][1] / finalDivisor;
+		newSeats = Math.round(newSeats);
+		newSeats = parseInt(newSeats);
+		listOfFederalResults[0][3] = (newSeats - listOfFederalResults[0][2]);
+	}
+	if (CDUThreshold){
+		newSeats = listOfFederalResults[1][1] / finalDivisor;
+		newSeats = Math.round(newSeats);
+		newSeats = parseInt(newSeats);
+		listOfFederalResults[1][3] = (newSeats - listOfFederalResults[1][2]);
+	}
+	if (FDPThreshold){
+		newSeats = listOfFederalResults[2][1] / finalDivisor;
+		newSeats = Math.round(newSeats);
+		newSeats = parseInt(newSeats);
+		listOfFederalResults[2][3] = (newSeats - listOfFederalResults[2][2]);
+	}
+	if (GreenThreshold){
+		newSeats = listOfFederalResults[3][1] / finalDivisor;
+		newSeats = Math.round(newSeats);
+		newSeats = parseInt(newSeats);
+		listOfFederalResults[3][3] = (newSeats - listOfFederalResults[3][2]);
+	}
+	if (SPDThreshold){
+		newSeats = listOfFederalResults[4][1] / finalDivisor;
+		newSeats = Math.round(newSeats);
+		newSeats = parseInt(newSeats);
+		listOfFederalResults[4][3] = (newSeats - listOfFederalResults[4][2]);
+	}
+	if (LeftThreshold){
+		newSeats = listOfFederalResults[5][1] / finalDivisor;
+		newSeats = Math.round(newSeats);
+		newSeats = parseInt(newSeats);
+		listOfFederalResults[5][3] = (newSeats - listOfFederalResults[5][2]);
+	}
+		
+	
+
+}
+
+function applyPartyStateDivisor(array, index, divisor, initialisation){
+	
+	if (initialisation){
+		prevResultsSH[index][3] = (parseInt(Math.round(prevResultsSH[index][1] / divisor)) > prevResultsSH[index][2]) ? parseInt(Math.round(prevResultsSH[index][1] / divisor)) - prevResultsSH[index][2] : 0;
+		prevResultsHM[index][3] = (parseInt(Math.round(prevResultsHM[index][1] / divisor)) > prevResultsHM[index][2]) ? parseInt(Math.round(prevResultsHM[index][1] / divisor)) - prevResultsHM[index][2] : 0;
+		prevResultsLS[index][3] = (parseInt(Math.round(prevResultsLS[index][1] / divisor)) > prevResultsLS[index][2]) ? parseInt(Math.round(prevResultsLS[index][1] / divisor)) - prevResultsLS[index][2] : 0;
+		prevResultsBM[index][3] = (parseInt(Math.round(prevResultsBM[index][1] / divisor)) > prevResultsBM[index][2]) ? parseInt(Math.round(prevResultsBM[index][1] / divisor)) - prevResultsBM[index][2] : 0;
+		prevResultsNRW[index][3] = (parseInt(Math.round(prevResultsNRW[index][1] / divisor)) > prevResultsNRW[index][2]) ? parseInt(Math.round(prevResultsNRW[index][1] / divisor)) - prevResultsNRW[index][2] : 0;
+		prevResultsHE[index][3] = (parseInt(Math.round(prevResultsHE[index][1] / divisor)) > prevResultsHE[index][2]) ? parseInt(Math.round(prevResultsHE[index][1] / divisor)) - prevResultsHE[index][2] : 0;
+		prevResultsRP[index][3] = (parseInt(Math.round(prevResultsRP[index][1] / divisor)) > prevResultsRP[index][2]) ? parseInt(Math.round(prevResultsRP[index][1] / divisor)) - prevResultsRP[index][2] : 0;
+		prevResultsBW[index][3] = (parseInt(Math.round(prevResultsBW[index][1] / divisor)) > prevResultsBW[index][2]) ? parseInt(Math.round(prevResultsBW[index][1] / divisor)) - prevResultsBW[index][2] : 0;
+		prevResultsBY[index][3] = (parseInt(Math.round(prevResultsBY[index][1] / divisor)) > prevResultsBY[index][2]) ? parseInt(Math.round(prevResultsBY[index][1] / divisor)) - prevResultsBY[index][2] : 0;
+		prevResultsSL[index][3] = (parseInt(Math.round(prevResultsSL[index][1] / divisor)) > prevResultsSL[index][2]) ? parseInt(Math.round(prevResultsSL[index][1] / divisor)) - prevResultsSL[index][2] : 0;
+		prevResultsBE[index][3] = (parseInt(Math.round(prevResultsBE[index][1] / divisor)) > prevResultsBE[index][2]) ? parseInt(Math.round(prevResultsBE[index][1] / divisor)) - prevResultsBE[index][2] : 0;
+		prevResultsBB[index][3] = (parseInt(Math.round(prevResultsBB[index][1] / divisor)) > prevResultsBB[index][2]) ? parseInt(Math.round(prevResultsBB[index][1] / divisor)) - prevResultsBB[index][2] : 0;
+		prevResultsMV[index][3] = (parseInt(Math.round(prevResultsMV[index][1] / divisor)) > prevResultsMV[index][2]) ? parseInt(Math.round(prevResultsMV[index][1] / divisor)) - prevResultsMV[index][2] : 0;
+		prevResultsSA[index][3] = (parseInt(Math.round(prevResultsSA[index][1] / divisor)) > prevResultsSA[index][2]) ? parseInt(Math.round(prevResultsSA[index][1] / divisor)) - prevResultsSA[index][2] : 0;
+		prevResultsST[index][3] = (parseInt(Math.round(prevResultsST[index][1] / divisor)) > prevResultsST[index][2]) ? parseInt(Math.round(prevResultsST[index][1] / divisor)) - prevResultsST[index][2] : 0;
+		prevResultsTH[index][3] = (parseInt(Math.round(prevResultsTH[index][1] / divisor)) > prevResultsTH[index][2]) ? parseInt(Math.round(prevResultsTH[index][1] / divisor)) - prevResultsTH[index][2] : 0;
+		
+	}
+	else {
+		currResultsSH[index][3] = (parseInt(Math.round(currResultsSH[index][1] / divisor)) > currResultsSH[index][2]) ? parseInt(Math.round(currResultsSH[index][1] / divisor)) - currResultsSH[index][2] : 0;
+		currResultsHM[index][3] = (parseInt(Math.round(currResultsHM[index][1] / divisor)) > currResultsHM[index][2]) ? parseInt(Math.round(currResultsHM[index][1] / divisor)) - currResultsHM[index][2] : 0;
+		currResultsLS[index][3] = (parseInt(Math.round(currResultsLS[index][1] / divisor)) > currResultsLS[index][2]) ? parseInt(Math.round(currResultsLS[index][1] / divisor)) - currResultsLS[index][2] : 0;
+		currResultsBM[index][3] = (parseInt(Math.round(currResultsBM[index][1] / divisor)) > currResultsBM[index][2]) ? parseInt(Math.round(currResultsBM[index][1] / divisor)) - currResultsBM[index][2] : 0;
+		currResultsNRW[index][3] = (parseInt(Math.round(currResultsNRW[index][1] / divisor)) > currResultsNRW[index][2]) ? parseInt(Math.round(currResultsNRW[index][1] / divisor)) - currResultsNRW[index][2] : 0;
+		currResultsHE[index][3] = (parseInt(Math.round(currResultsHE[index][1] / divisor)) > currResultsHE[index][2]) ? parseInt(Math.round(currResultsHE[index][1] / divisor)) - currResultsHE[index][2] : 0;
+		currResultsRP[index][3] = (parseInt(Math.round(currResultsRP[index][1] / divisor)) > currResultsRP[index][2]) ? parseInt(Math.round(currResultsRP[index][1] / divisor)) - currResultsRP[index][2] : 0;
+		currResultsBW[index][3] = (parseInt(Math.round(currResultsBW[index][1] / divisor)) > currResultsBW[index][2]) ? parseInt(Math.round(currResultsBW[index][1] / divisor)) - currResultsBW[index][2] : 0;
+		currResultsBY[index][3] = (parseInt(Math.round(currResultsBY[index][1] / divisor)) > currResultsBY[index][2]) ? parseInt(Math.round(currResultsBY[index][1] / divisor)) - currResultsBY[index][2] : 0;
+		currResultsSL[index][3] = (parseInt(Math.round(currResultsSL[index][1] / divisor)) > currResultsSL[index][2]) ? parseInt(Math.round(currResultsSL[index][1] / divisor)) - currResultsSL[index][2] : 0;
+		currResultsBE[index][3] = (parseInt(Math.round(currResultsBE[index][1] / divisor)) > currResultsBE[index][2]) ? parseInt(Math.round(currResultsBE[index][1] / divisor)) - currResultsBE[index][2] : 0;
+		currResultsBB[index][3] = (parseInt(Math.round(currResultsBB[index][1] / divisor)) > currResultsBB[index][2]) ? parseInt(Math.round(currResultsBB[index][1] / divisor)) - currResultsBB[index][2] : 0;
+		currResultsMV[index][3] = (parseInt(Math.round(currResultsMV[index][1] / divisor)) > currResultsMV[index][2]) ? parseInt(Math.round(currResultsMV[index][1] / divisor)) - currResultsMV[index][2] : 0;
+		currResultsSA[index][3] = (parseInt(Math.round(currResultsSA[index][1] / divisor)) > currResultsSA[index][2]) ? parseInt(Math.round(currResultsSA[index][1] / divisor)) - currResultsSA[index][2] : 0;
+		currResultsST[index][3] = (parseInt(Math.round(currResultsST[index][1] / divisor)) > currResultsST[index][2]) ? parseInt(Math.round(currResultsST[index][1] / divisor)) - currResultsST[index][2] : 0;
+		currResultsTH[index][3] = (parseInt(Math.round(currResultsTH[index][1] / divisor)) > currResultsTH[index][2]) ? parseInt(Math.round(currResultsTH[index][1] / divisor)) - currResultsTH[index][2] : 0;
+	}
+
+	
+	
+}
+
+function sainteLague(listOfResults, targetSeats, partyVotes){
+	
+	partySeats = 0;
+	divisor = parseInt(Math.round(partyVotes / targetSeats));
+	
+	while (partySeats != targetSeats)
+	{
+		partySeats = 0;
+		for (var i = 0; i < listOfResults.length; i++)
+		{
+			newSeats = parseInt(Math.round(listOfResults[i][1] / divisor));
+			if (listOfResults[i][2] > newSeats)
+			{
+				partySeats = partySeats + listOfResults[i][2];
+			}
+			else
+			{
+				partySeats = partySeats + newSeats;
+			}
+		}
+	
+		if (partySeats > targetSeats)
+		{
+			//divisor = increaseDivisor();
+			divisor = divisor + (divisor *0.01);
+		}
+		else if (partySeats < targetSeats)
+		{
+			//divisor = decreaseDivisor();
+			divisor = divisor - (divisor *0.01);
+		}	
+	
+	}
+	return divisor;
+	
+}
+
+function federalResultsToStateLevel(initialisation) {
+	
+	if (initialisation)
+	{
+		prevResultsSH.sort(sortFunctionC);
+		prevResultsHM.sort(sortFunctionC);
+		prevResultsLS.sort(sortFunctionC);
+		prevResultsBM.sort(sortFunctionC);
+		prevResultsNRW.sort(sortFunctionC);
+		prevResultsHE.sort(sortFunctionC);
+		prevResultsRP.sort(sortFunctionC);
+		prevResultsBW.sort(sortFunctionC);
+		prevResultsBY.sort(sortFunctionC);
+		prevResultsSL.sort(sortFunctionC);
+		prevResultsBE.sort(sortFunctionC);
+		prevResultsBB.sort(sortFunctionC);
+		prevResultsMV.sort(sortFunctionC);
+		prevResultsSA.sort(sortFunctionC);
+		prevResultsST.sort(sortFunctionC);
+		prevResultsTH.sort(sortFunctionC);
+		prevFederalResults.sort(sortFunctionC);
+		
+		
+		var AfDArray  = [["SH",prevResultsSH[0][1], prevResultsSH[0][2]],
+					["HM",prevResultsHM[0][1], prevResultsHM[0][2]],
+					["LS",prevResultsLS[0][1], prevResultsLS[0][2]],
+					["BM",prevResultsBM[0][1], prevResultsBM[0][2]],
+					["NRW",prevResultsNRW[0][1], prevResultsNRW[0][2]],
+					["HE",prevResultsHE[0][1], prevResultsHE[0][2]],
+					["RP",prevResultsRP[0][1], prevResultsRP[0][2]],
+					["BW",prevResultsBW[0][1], prevResultsBW[0][2]],
+					["BY",prevResultsBY[0][1], prevResultsBY[0][2]],
+					["SL",prevResultsSL[0][1], prevResultsSL[0][2]],
+					["BE",prevResultsBE[0][1], prevResultsBE[0][2]],
+					["BB",prevResultsBB[0][1], prevResultsBB[0][2]],
+					["MV",prevResultsMV[0][1], prevResultsMV[0][2]],
+					["SA",prevResultsSA[0][1], prevResultsSA[0][2]],
+					["ST",prevResultsST[0][1], prevResultsST[0][2]],
+					["TH",prevResultsTH[0][1], prevResultsTH[0][2]]];
+					
+		var CDUArray  = [["SH",prevResultsSH[1][1], prevResultsSH[1][2]],
+					["HM",prevResultsHM[1][1], prevResultsHM[1][2]],
+					["LS",prevResultsLS[1][1], prevResultsLS[1][2]],
+					["BM",prevResultsBM[1][1], prevResultsBM[1][2]],
+					["NRW",prevResultsNRW[1][1], prevResultsNRW[1][2]],
+					["HE",prevResultsHE[1][1], prevResultsHE[1][2]],
+					["RP",prevResultsRP[1][1], prevResultsRP[1][2]],
+					["BW",prevResultsBW[1][1], prevResultsBW[1][2]],
+					["SL",prevResultsSL[1][1], prevResultsSL[1][2]],
+					["BE",prevResultsBE[1][1], prevResultsBE[1][2]],
+					["BB",prevResultsBB[1][1], prevResultsBB[1][2]],
+					["MV",prevResultsMV[1][1], prevResultsMV[1][2]],
+					["SA",prevResultsSA[1][1], prevResultsSA[1][2]],
+					["ST",prevResultsST[1][1], prevResultsST[1][2]],
+					["TH",prevResultsTH[1][1], prevResultsTH[1][2]]];
+		
+		var FDPArray  = [["SH",prevResultsSH[2][1], prevResultsSH[2][2]],
+					["HM",prevResultsHM[2][1], prevResultsHM[2][2]],
+					["LS",prevResultsLS[2][1], prevResultsLS[2][2]],
+					["BM",prevResultsBM[2][1], prevResultsBM[2][2]],
+					["NRW",prevResultsNRW[2][1], prevResultsNRW[2][2]],
+					["HE",prevResultsHE[2][1], prevResultsHE[2][2]],
+					["RP",prevResultsRP[2][1], prevResultsRP[2][2]],
+					["BW",prevResultsBW[2][1], prevResultsBW[2][2]],
+					["BY",prevResultsBY[2][1], prevResultsBY[2][2]],
+					["SL",prevResultsSL[2][1], prevResultsSL[2][2]],
+					["BE",prevResultsBE[2][1], prevResultsBE[2][2]],
+					["BB",prevResultsBB[2][1], prevResultsBB[2][2]],
+					["MV",prevResultsMV[2][1], prevResultsMV[2][2]],
+					["SA",prevResultsSA[2][1], prevResultsSA[2][2]],
+					["ST",prevResultsST[2][1], prevResultsST[2][2]],
+					["TH",prevResultsTH[2][1], prevResultsTH[2][2]]];
+					
+		var GreenArray  = [["SH",prevResultsSH[3][1], prevResultsSH[3][2]],
+					["HM",prevResultsHM[3][1], prevResultsHM[3][2]],
+					["LS",prevResultsLS[3][1], prevResultsLS[3][2]],
+					["BM",prevResultsBM[3][1], prevResultsBM[3][2]],
+					["NRW",prevResultsNRW[3][1], prevResultsNRW[3][2]],
+					["HE",prevResultsHE[3][1], prevResultsHE[3][2]],
+					["RP",prevResultsRP[3][1], prevResultsRP[3][2]],
+					["BW",prevResultsBW[3][1], prevResultsBW[3][2]],
+					["BY",prevResultsBY[3][1], prevResultsBY[3][2]],
+					["SL",prevResultsSL[3][1], prevResultsSL[3][2]],
+					["BE",prevResultsBE[3][1], prevResultsBE[3][2]],
+					["BB",prevResultsBB[3][1], prevResultsBB[3][2]],
+					["MV",prevResultsMV[3][1], prevResultsMV[3][2]],
+					["SA",prevResultsSA[3][1], prevResultsSA[3][2]],
+					["ST",prevResultsST[3][1], prevResultsST[3][2]],
+					["TH",prevResultsTH[3][1], prevResultsTH[3][2]]];
+		
+		var SPDArray  = [["SH",prevResultsSH[4][1], prevResultsSH[4][2]],
+					["HM",prevResultsHM[4][1], prevResultsHM[4][2]],
+					["LS",prevResultsLS[4][1], prevResultsLS[4][2]],
+					["BM",prevResultsBM[4][1], prevResultsBM[4][2]],
+					["NRW",prevResultsNRW[4][1], prevResultsNRW[4][2]],
+					["HE",prevResultsHE[4][1], prevResultsHE[4][2]],
+					["RP",prevResultsRP[4][1], prevResultsRP[4][2]],
+					["BW",prevResultsBW[4][1], prevResultsBW[4][2]],
+					["BY",prevResultsBY[4][1], prevResultsBY[4][2]],
+					["SL",prevResultsSL[4][1], prevResultsSL[4][2]],
+					["BE",prevResultsBE[4][1], prevResultsBE[4][2]],
+					["BB",prevResultsBB[4][1], prevResultsBB[4][2]],
+					["MV",prevResultsMV[4][1], prevResultsMV[4][2]],
+					["SA",prevResultsSA[4][1], prevResultsSA[4][2]],
+					["ST",prevResultsST[4][1], prevResultsST[4][2]],
+					["TH",prevResultsTH[4][1], prevResultsTH[4][2]]];
+					
+		var LeftArray  = [["SH",prevResultsSH[5][1], prevResultsSH[5][2]],
+					["HM",prevResultsHM[5][1], prevResultsHM[5][2]],
+					["LS",prevResultsLS[5][1], prevResultsLS[5][2]],
+					["BM",prevResultsBM[5][1], prevResultsBM[5][2]],
+					["NRW",prevResultsNRW[5][1], prevResultsNRW[5][2]],
+					["HE",prevResultsHE[5][1], prevResultsHE[5][2]],
+					["RP",prevResultsRP[5][1], prevResultsRP[5][2]],
+					["BW",prevResultsBW[5][1], prevResultsBW[5][2]],
+					["BY",prevResultsBY[5][1], prevResultsBY[5][2]],
+					["SL",prevResultsSL[5][1], prevResultsSL[5][2]],
+					["BE",prevResultsBE[5][1], prevResultsBE[5][2]],
+					["BB",prevResultsBB[5][1], prevResultsBB[5][2]],
+					["MV",prevResultsMV[5][1], prevResultsMV[5][2]],
+					["SA",prevResultsSA[5][1], prevResultsSA[5][2]],
+					["ST",prevResultsST[5][1], prevResultsST[5][2]],
+					["TH",prevResultsTH[5][1], prevResultsTH[5][2]]];
+		
+		var CSUArray  = ["BY",prevResultsBY[1][1], prevResultsBY[1][2]];
+		//console.log(CDUArray);
+		
+		
+		
+		var divisorArray = [((AfDThreshold) ? sainteLague(AfDArray, (prevFederalResults[0][2] + prevFederalResults[0][3]), prevFederalResults[0][1]) : 0),
+		((CDUThreshold) ? sainteLague(CDUArray, ((prevFederalResults[1][2] + prevFederalResults[1][3]) - CSUFederalSeats), prevFederalResults[1][1] - prevResultsBY[1][1]) : 0),
+		((FDPThreshold) ? sainteLague(FDPArray, (prevFederalResults[2][2] + prevFederalResults[2][3]), prevFederalResults[2][1]) : 0),
+		((GreenThreshold) ? sainteLague(GreenArray, (prevFederalResults[3][2] + prevFederalResults[3][3]), prevFederalResults[3][1]) : 0),
+		((SPDThreshold) ? sainteLague(SPDArray, (prevFederalResults[4][2] + prevFederalResults[4][3]), prevFederalResults[4][1]) : 0),
+		((LeftThreshold) ? sainteLague(LeftArray, (prevFederalResults[5][2] + prevFederalResults[5][3]), prevFederalResults[5][1]) : 0)];
+		
+		if (CDUThreshold){
+			var CSUDivisor = parseInt(Math.round(prevResultsBY[1][1] / CSUFederalSeats));
+			prevResultsBY[1][3] = (parseInt(Math.round(prevResultsBY[1][1] / CSUDivisor)) > prevResultsBY[1][2]) ? parseInt(Math.round(prevResultsBY[1][1] / CSUDivisor)) - prevResultsBY[1][2] : 0;	
+		}
+		
+		
+		
+		for (var i = 0; i < divisorArray.length; i++){
+			applyPartyStateDivisor(prevResultsSH, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(prevResultsHM, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(prevResultsLS, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(prevResultsBM, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(prevResultsNRW, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(prevResultsHE, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(prevResultsRP, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(prevResultsBW, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(prevResultsBY, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(prevResultsSL, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(prevResultsBE, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(prevResultsBB, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(prevResultsMV, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(prevResultsSA, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(prevResultsST, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(prevResultsTH, i, divisorArray[i], initialisation);	
+			
+		}
+		
+		
+		
+	}
+	else
+	{
+		currResultsSH.sort(sortFunctionC);
+		currResultsHM.sort(sortFunctionC);
+		currResultsLS.sort(sortFunctionC);
+		currResultsBM.sort(sortFunctionC);
+		currResultsNRW.sort(sortFunctionC);
+		currResultsHE.sort(sortFunctionC);
+		currResultsRP.sort(sortFunctionC);
+		currResultsBW.sort(sortFunctionC);
+		currResultsBY.sort(sortFunctionC);
+		currResultsSL.sort(sortFunctionC);
+		currResultsBE.sort(sortFunctionC);
+		currResultsBB.sort(sortFunctionC);
+		currResultsMV.sort(sortFunctionC);
+		currResultsSA.sort(sortFunctionC);
+		currResultsST.sort(sortFunctionC);
+		currResultsTH.sort(sortFunctionC);
+		currFederalResults.sort(sortFunctionC);
+		
+		var AfDArray  = [["SH",currResultsSH[0][1], currResultsSH[0][2]],
+					["HM",currResultsHM[0][1], currResultsHM[0][2]],
+					["LS",currResultsLS[0][1], currResultsLS[0][2]],
+					["BM",currResultsBM[0][1], currResultsBM[0][2]],
+					["NRW",currResultsNRW[0][1], currResultsNRW[0][2]],
+					["HE",currResultsHE[0][1], currResultsHE[0][2]],
+					["RP",currResultsRP[0][1], currResultsRP[0][2]],
+					["BW",currResultsBW[0][1], currResultsBW[0][2]],
+					["BY",currResultsBY[0][1], currResultsBY[0][2]],
+					["SL",currResultsSL[0][1], currResultsSL[0][2]],
+					["BE",currResultsBE[0][1], currResultsBE[0][2]],
+					["BB",currResultsBB[0][1], currResultsBB[0][2]],
+					["MV",currResultsMV[0][1], currResultsMV[0][2]],
+					["SA",currResultsSA[0][1], currResultsSA[0][2]],
+					["ST",currResultsST[0][1], currResultsST[0][2]],
+					["TH",currResultsTH[0][1], currResultsTH[0][2]]];
+					
+		var CDUArray  = [["SH",currResultsSH[1][1], currResultsSH[1][2]],
+					["HM",currResultsHM[1][1], currResultsHM[1][2]],
+					["LS",currResultsLS[1][1], currResultsLS[1][2]],
+					["BM",currResultsBM[1][1], currResultsBM[1][2]],
+					["NRW",currResultsNRW[1][1], currResultsNRW[1][2]],
+					["HE",currResultsHE[1][1], currResultsHE[1][2]],
+					["RP",currResultsRP[1][1], currResultsRP[1][2]],
+					["BW",currResultsBW[1][1], currResultsBW[1][2]],
+					["SL",currResultsSL[1][1], currResultsSL[1][2]],
+					["BE",currResultsBE[1][1], currResultsBE[1][2]],
+					["BB",currResultsBB[1][1], currResultsBB[1][2]],
+					["MV",currResultsMV[1][1], currResultsMV[1][2]],
+					["SA",currResultsSA[1][1], currResultsSA[1][2]],
+					["ST",currResultsST[1][1], currResultsST[1][2]],
+					["TH",currResultsTH[1][1], currResultsTH[1][2]]];
+		
+		var FDPArray  = [["SH",currResultsSH[2][1], currResultsSH[2][2]],
+					["HM",currResultsHM[2][1], currResultsHM[2][2]],
+					["LS",currResultsLS[2][1], currResultsLS[2][2]],
+					["BM",currResultsBM[2][1], currResultsBM[2][2]],
+					["NRW",currResultsNRW[2][1], currResultsNRW[2][2]],
+					["HE",currResultsHE[2][1], currResultsHE[2][2]],
+					["RP",currResultsRP[2][1], currResultsRP[2][2]],
+					["BW",currResultsBW[2][1], currResultsBW[2][2]],
+					["BY",currResultsBY[2][1], currResultsBY[2][2]],
+					["SL",currResultsSL[2][1], currResultsSL[2][2]],
+					["BE",currResultsBE[2][1], currResultsBE[2][2]],
+					["BB",currResultsBB[2][1], currResultsBB[2][2]],
+					["MV",currResultsMV[2][1], currResultsMV[2][2]],
+					["SA",currResultsSA[2][1], currResultsSA[2][2]],
+					["ST",currResultsST[2][1], currResultsST[2][2]],
+					["TH",currResultsTH[2][1], currResultsTH[2][2]]];
+					
+		var GreenArray  = [["SH",currResultsSH[3][1], currResultsSH[3][2]],
+					["HM",currResultsHM[3][1], currResultsHM[3][2]],
+					["LS",currResultsLS[3][1], currResultsLS[3][2]],
+					["BM",currResultsBM[3][1], currResultsBM[3][2]],
+					["NRW",currResultsNRW[3][1], currResultsNRW[3][2]],
+					["HE",currResultsHE[3][1], currResultsHE[3][2]],
+					["RP",currResultsRP[3][1], currResultsRP[3][2]],
+					["BW",currResultsBW[3][1], currResultsBW[3][2]],
+					["BY",currResultsBY[3][1], currResultsBY[3][2]],
+					["SL",currResultsSL[3][1], currResultsSL[3][2]],
+					["BE",currResultsBE[3][1], currResultsBE[3][2]],
+					["BB",currResultsBB[3][1], currResultsBB[3][2]],
+					["MV",currResultsMV[3][1], currResultsMV[3][2]],
+					["SA",currResultsSA[3][1], currResultsSA[3][2]],
+					["ST",currResultsST[3][1], currResultsST[3][2]],
+					["TH",currResultsTH[3][1], currResultsTH[3][2]]];
+		
+		var SPDArray  = [["SH",currResultsSH[4][1], currResultsSH[4][2]],
+					["HM",currResultsHM[4][1], currResultsHM[4][2]],
+					["LS",currResultsLS[4][1], currResultsLS[4][2]],
+					["BM",currResultsBM[4][1], currResultsBM[4][2]],
+					["NRW",currResultsNRW[4][1], currResultsNRW[4][2]],
+					["HE",currResultsHE[4][1], currResultsHE[4][2]],
+					["RP",currResultsRP[4][1], currResultsRP[4][2]],
+					["BW",currResultsBW[4][1], currResultsBW[4][2]],
+					["BY",currResultsBY[4][1], currResultsBY[4][2]],
+					["SL",currResultsSL[4][1], currResultsSL[4][2]],
+					["BE",currResultsBE[4][1], currResultsBE[4][2]],
+					["BB",currResultsBB[4][1], currResultsBB[4][2]],
+					["MV",currResultsMV[4][1], currResultsMV[4][2]],
+					["SA",currResultsSA[4][1], currResultsSA[4][2]],
+					["ST",currResultsST[4][1], currResultsST[4][2]],
+					["TH",currResultsTH[4][1], currResultsTH[4][2]]];
+					
+		var LeftArray  = [["SH",currResultsSH[5][1], currResultsSH[5][2]],
+					["HM",currResultsHM[5][1], currResultsHM[5][2]],
+					["LS",currResultsLS[5][1], currResultsLS[5][2]],
+					["BM",currResultsBM[5][1], currResultsBM[5][2]],
+					["NRW",currResultsNRW[5][1], currResultsNRW[5][2]],
+					["HE",currResultsHE[5][1], currResultsHE[5][2]],
+					["RP",currResultsRP[5][1], currResultsRP[5][2]],
+					["BW",currResultsBW[5][1], currResultsBW[5][2]],
+					["BY",currResultsBY[5][1], currResultsBY[5][2]],
+					["SL",currResultsSL[5][1], currResultsSL[5][2]],
+					["BE",currResultsBE[5][1], currResultsBE[5][2]],
+					["BB",currResultsBB[5][1], currResultsBB[5][2]],
+					["MV",currResultsMV[5][1], currResultsMV[5][2]],
+					["SA",currResultsSA[5][1], currResultsSA[5][2]],
+					["ST",currResultsST[5][1], currResultsST[5][2]],
+					["TH",currResultsTH[5][1], currResultsTH[5][2]]];
+		
+		var CSUArray  = ["BY",currResultsBY[1][1], currResultsBY[1][2]];
+
+
+		
+		var divisorArray = [((AfDThreshold) ? sainteLague(AfDArray, (currFederalResults[0][2] + currFederalResults[0][3]), currFederalResults[0][1]) : 0),
+		((CDUThreshold) ? sainteLague(CDUArray, ((currFederalResults[1][2] + currFederalResults[1][3]) - CSUFederalSeats), currFederalResults[1][1] - currResultsBY[1][1]) : 0),
+		((FDPThreshold) ? sainteLague(FDPArray, (currFederalResults[2][2] + currFederalResults[2][3]), currFederalResults[2][1]) : 0),
+		((GreenThreshold) ? sainteLague(GreenArray, (currFederalResults[3][2] + currFederalResults[3][3]), currFederalResults[3][1]) : 0),
+		((SPDThreshold) ? sainteLague(SPDArray, (currFederalResults[4][2] + currFederalResults[4][3]), currFederalResults[4][1]) : 0),
+		((LeftThreshold) ? sainteLague(LeftArray, (currFederalResults[5][2] + currFederalResults[5][3]), currFederalResults[5][1]) : 0)];
+		
+		if (CDUThreshold){
+			var CSUDivisor = parseInt(Math.round(currResultsBY[1][1] / CSUFederalSeats));
+			currResultsBY[1][3] = (parseInt(Math.round(currResultsBY[1][1] / CSUDivisor)) > currResultsBY[1][2]) ? parseInt(Math.round(currResultsBY[1][1] / CSUDivisor)) - currResultsBY[1][2] : 0;	
+		}
+		
+		
+		for (var i = 0; i < divisorArray.length; i++){
+			applyPartyStateDivisor(currResultsSH, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(currResultsHM, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(currResultsLS, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(currResultsBM, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(currResultsNRW, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(currResultsHE, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(currResultsRP, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(currResultsBW, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(currResultsBY, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(currResultsSL, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(currResultsBE, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(currResultsBB, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(currResultsMV, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(currResultsSA, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(currResultsST, i, divisorArray[i], initialisation);
+			applyPartyStateDivisor(currResultsTH, i, divisorArray[i], initialisation);	
+			
+		}
+		
+		currResultsBY[1][3] = (parseInt(Math.round(currResultsBY[1][1] / CSUDivisor)) > currResultsBY[1][2]) ? parseInt(Math.round(currResultsBY[1][1] / CSUDivisor)) - currResultsBY[1][2] : 0;
+		
+	}
+	
+	
+}
+
+
+function seatCalculation(initialisation) {
+	
+	if (initialisation){
+		states.eachLayer(function(currentLayer){
+			((currentLayer.feature.properties.Name == "Schleswig-Holstein") ? initialStateSainteLague(prevResultsSH, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Hamburg") ? initialStateSainteLague(prevResultsHM, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Lower Saxony") ? initialStateSainteLague(prevResultsLS, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Bremen") ? initialStateSainteLague(prevResultsBM, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "North Rhine-Westphalia") ? initialStateSainteLague(prevResultsNRW, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Hesse") ? initialStateSainteLague(prevResultsHE, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Rheinland-Palatinate") ? initialStateSainteLague(prevResultsRP, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Baden-Wurttemberg") ? initialStateSainteLague(prevResultsBW, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Bavaria") ? initialStateSainteLague(prevResultsBY, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Saarland") ? initialStateSainteLague(prevResultsSL, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Berlin") ? initialStateSainteLague(prevResultsBE, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Brandenburg") ? initialStateSainteLague(prevResultsBB, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Mecklenburg-Vorpommern") ? initialStateSainteLague(prevResultsMV, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Saxony") ? initialStateSainteLague(prevResultsSA, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Saxony-Anhalt") ? initialStateSainteLague(prevResultsST, currentLayer.feature.properties.StateSeats, initialisation)
+			: initialStateSainteLague(prevResultsTH, currentLayer.feature.properties.StateSeats, initialisation));
+		});
+		
+		federalOverhangEqualisation(prevFederalResults, prevResultsBY);
+		federalResultsToStateLevel(initialisation);
+		
+	}
+	else {
+		states.eachLayer(function(currentLayer){
+			((currentLayer.feature.properties.Name == "Schleswig-Holstein") ? initialStateSainteLague(currResultsSH, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Hamburg") ? initialStateSainteLague(currResultsHM, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Lower Saxony") ? initialStateSainteLague(currResultsLS, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Bremen") ? initialStateSainteLague(currResultsBM, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "North Rhine-Westphalia") ? initialStateSainteLague(currResultsNRW, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Hesse") ? initialStateSainteLague(currResultsHE, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Rheinland-Palatinate") ? initialStateSainteLague(currResultsRP, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Baden-Wurttemberg") ? initialStateSainteLague(currResultsBW, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Bavaria") ? initialStateSainteLague(currResultsBY, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Saarland") ? initialStateSainteLague(currResultsSL, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Berlin") ? initialStateSainteLague(currResultsBE, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Brandenburg") ? initialStateSainteLague(currResultsBB, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Mecklenburg-Vorpommern") ? initialStateSainteLague(currResultsMV, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Saxony") ? initialStateSainteLague(currResultsSA, currentLayer.feature.properties.StateSeats, initialisation)
+			: (currentLayer.feature.properties.Name == "Saxony-Anhalt") ? initialStateSainteLague(currResultsST, currentLayer.feature.properties.StateSeats, initialisation)
+			: initialStateSainteLague(currResultsTH, currentLayer.feature.properties.StateSeats, initialisation));
+		});
+		
+		federalOverhangEqualisation(currFederalResults, currResultsBY);
+		federalResultsToStateLevel(initialisation);
+	}
+	
+	
+}
 
 
 
@@ -1313,6 +1426,40 @@ function displayPrevResults() {
 	calculateUserPrediction();
 }
 
+function thresholdChecker(index, currentVoteShare){
+
+	if ((currentVoteShare >= 5) || (currFederalResults[index][2] >= 3)){
+		return true;
+	}
+	else {
+		return false;
+	}
+
+}
+
+function thresholdImplementor(index, partyThreshold) {
+	if (!partyThreshold){
+		currResultsSH[index][4] = 0;
+		currResultsHM[index][4] = 0;
+		currResultsLS[index][4] = 0;
+		currResultsBM[index][4] = 0;
+		currResultsNRW[index][4] = 0;
+		currResultsHE[index][4] = 0;
+		currResultsRP[index][4] = 0;
+		currResultsBW[index][4] = 0;
+		currResultsBY[index][4] = 0;
+		currResultsSL[index][4] = 0;
+		currResultsBE[index][4] = 0;
+		currResultsBB[index][4] = 0;
+		currResultsMV[index][4] = 0;
+		currResultsSA[index][4] = 0;
+		currResultsST[index][4] = 0;
+		currResultsTH[index][4] = 0;
+		currFederalResults[index][4] = 0;
+	}
+	
+}
+
 function calculateUserPrediction() {
 	
 	SPDModifier = 1 + ((document.getElementById("SPDInput").value - prevSPDVoteShare) / prevSPDVoteShare);
@@ -1342,6 +1489,39 @@ function calculateUserPrediction() {
 	currResultsSL = fillStateArrays(constituenciesSL, false, false);
 
 	currFederalResults = fillFederalArray();
+	currResultsSH.sort(sortFunctionC);
+	currResultsHM.sort(sortFunctionC);
+	currResultsLS.sort(sortFunctionC);
+	currResultsBM.sort(sortFunctionC);
+	currResultsNRW.sort(sortFunctionC);
+	currResultsHE.sort(sortFunctionC);
+	currResultsRP.sort(sortFunctionC);
+	currResultsBW.sort(sortFunctionC);
+	currResultsBY.sort(sortFunctionC);
+	currResultsSL.sort(sortFunctionC);
+	currResultsBE.sort(sortFunctionC);
+	currResultsBB.sort(sortFunctionC);
+	currResultsMV.sort(sortFunctionC);
+	currResultsSA.sort(sortFunctionC);
+	currResultsST.sort(sortFunctionC);
+	currResultsTH.sort(sortFunctionC);
+	currFederalResults.sort(sortFunctionC);
+	
+	
+	AfDThreshold = thresholdChecker(0, document.getElementById("AfDInput").value);
+	CDUThreshold = thresholdChecker(1, document.getElementById("CDUInput").value);
+	FDPThreshold = thresholdChecker(2, document.getElementById("FDPInput").value);
+	GreenThreshold = thresholdChecker(3, document.getElementById("GreenInput").value);
+	SPDThreshold = thresholdChecker(4, document.getElementById("SPDInput").value);
+	LeftThreshold = thresholdChecker(5, document.getElementById("LeftInput").value);
+	
+	thresholdImplementor(0, AfDThreshold);
+	thresholdImplementor(1, CDUThreshold);
+	thresholdImplementor(2, FDPThreshold);
+	thresholdImplementor(3, GreenThreshold);
+	thresholdImplementor(4, SPDThreshold);
+	thresholdImplementor(5, LeftThreshold);
+	
 	
 	states.eachLayer(function(layer){ //Iterate through each layer in a collection
 		states.resetStyle(layer);
@@ -1403,7 +1583,6 @@ function calculateUserPrediction() {
 	currFederalResults.sort(sortFunction);
 	updateResultsTable(currFederalResults, prevFederalResults);
 }
-
 
 function resetHighlightStates(e) {
 	states.resetStyle(e.target);
@@ -1586,7 +1765,6 @@ function zoomToFeatureStatesToConstituencies(e) {
 
 }
 
-
 function onEachFeatureStates(feature, layer) {
 	layer.on({
 		mouseover: highlightFeatureStates,
@@ -1673,8 +1851,6 @@ function displayPopup(e) {
 
 function updateResultsTable(currResults, prevResults) {
 	
-	console.log(currResults);
-	console.log(prevResults);
 
 	var indexs = new Array(6);
 	index = 0;
