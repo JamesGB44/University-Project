@@ -471,9 +471,11 @@ function fillStateArrays(stateCollection, isBavaria, initialisation) {
 
 	var results = new Array(noOfParties);
 	for (var i = 0; i < results.length; i++) {
-		results[i] = new Array(4); //Loop through depending on how many districts there are and create new fields.
+		results[i] = new Array(5); //Loop through depending on how many districts there are and create new fields.
 		results[i][1] = 0;
 		results[i][2] = 0;
+		results[i][3] = 0;
+		results[i][4] = 0;
 	}
 
 	var index = 0; //Default index to 0 as this is the standard starting point for any array.
@@ -492,6 +494,12 @@ function fillStateArrays(stateCollection, isBavaria, initialisation) {
 			: Math.round(((currentLayer.feature.properties.GreenVote2 * GreenModifier) * 1) / 1));
 			results[index][2] = (constituencyWinner(currentLayer, results, parties[i]) ? results[index][2] = results[index][2] + 1 : results[index][2]);
 			results[index][3] = 0;
+			results[index][4] = results[index][1] + ((parties[i] == "SPD") ? Math.round(((currentLayer.feature.properties.SPDVote2 * SPDModifier) * 1) / 1)
+			: (parties[i] == "CSU") ? Math.round(((currentLayer.feature.properties.CSUVote2 * CDUModifier) * 1) / 1)
+			: (parties[i] == "AfD") ? Math.round(((currentLayer.feature.properties.AfDVote2 * AfDModifier) * 1) / 1)
+			: (parties[i] == "FDP") ? Math.round(((currentLayer.feature.properties.FDPVote2 * FDPModifier) * 1) / 1)
+			: (parties[i] == "The Left") ? Math.round(((currentLayer.feature.properties.LeftVote2 * LeftModifier) * 1) / 1)
+			: Math.round(((currentLayer.feature.properties.GreenVote2 * GreenModifier) * 1) / 1));
 			index++;
 		}
 		index = 0;
@@ -513,6 +521,12 @@ function fillStateArrays(stateCollection, isBavaria, initialisation) {
 			: Math.round(((currentLayer.feature.properties.GreenVote2 * GreenModifier) * 1) / 1));
 			results[index][2] = (constituencyWinner(currentLayer, results, parties[i]) ? results[index][2] = results[index][2] + 1 : results[index][2]);
 			results[index][3] = 0;
+			results[index][4] = results[index][1] + ((parties[i] == "SPD") ? Math.round(((currentLayer.feature.properties.SPDVote2 * SPDModifier) * 1) / 1)
+			: (parties[i] == "CDU") ? Math.round(((currentLayer.feature.properties.CDUVote2 * CDUModifier) * 1) / 1)
+			: (parties[i] == "AfD") ? Math.round(((currentLayer.feature.properties.AfDVote2 * AfDModifier) * 1) / 1)
+			: (parties[i] == "FDP") ? Math.round(((currentLayer.feature.properties.FDPVote2 * FDPModifier) * 1) / 1)
+			: (parties[i] == "The Left") ? Math.round(((currentLayer.feature.properties.LeftVote2 * LeftModifier) * 1) / 1)
+			: Math.round(((currentLayer.feature.properties.GreenVote2 * GreenModifier) * 1) / 1));
 			index++;
 		}
 		index = 0;
@@ -530,36 +544,42 @@ function fillFederalArrayByState(currentArray, results){
 			results[0][1] = results[0][1] + currentArray[i][1];
 			results[0][2] = results[0][2] + currentArray[i][2];
 			results[0][3] = results[0][3] + currentArray[i][3];
+			results[0][4] = results[0][4] + currentArray[i][1];
 		}
 		if ((currentArray[i][0] == "CDU") || (currentArray[i][0] == "CSU"))
 		{
 			results[1][1] = results[1][1] + currentArray[i][1];
 			results[1][2] = results[1][2] + currentArray[i][2];
 			results[1][3] = results[1][3] + currentArray[i][3];
+			results[1][4] = results[1][4] + currentArray[i][1];
 		}
 		if (currentArray[i][0] == "AfD")
 		{
 			results[2][1] = results[2][1] + currentArray[i][1];
 			results[2][2] = results[2][2] + currentArray[i][2];
 			results[2][3] = results[2][3] + currentArray[i][3];
+			results[2][4] = results[2][4] + currentArray[i][1];
 		}
 		if (currentArray[i][0] == "FDP")
 		{
 			results[3][1] = results[3][1] + currentArray[i][1];
 			results[3][2] = results[3][2] + currentArray[i][2];
 			results[3][3] = results[3][3] + currentArray[i][3];
+			results[3][4] = results[2][4] + currentArray[i][1];
 		}
 		if (currentArray[i][0] == "The Left")
 		{
 			results[4][1] = results[4][1] + currentArray[i][1];
 			results[4][2] = results[4][2] + currentArray[i][2];
 			results[4][3] = results[4][3] + currentArray[i][3];
+			results[4][4] = results[4][4] + currentArray[i][1];
 		}
 		if (currentArray[i][0] == "Green")
 		{
 			results[5][1] = results[5][1] + currentArray[i][1];
 			results[5][2] = results[5][2] + currentArray[i][2];
 			results[5][3] = results[5][3] + currentArray[i][3];
+			results[5][4] = results[5][4] + currentArray[i][1];
 		}		
 	}
 	
@@ -573,11 +593,12 @@ function fillFederalArray() {
 	var parties = ["SPD","CDU/CSU","AfD","FDP","The Left","Green"];
 	var results = new Array(noOfParties);
 	for (var i = 0; i < results.length; i++) {
-		results[i] = new Array(4); //Loop through depending on how many districts there are and create new fields.
+		results[i] = new Array(5); //Loop through depending on how many districts there are and create new fields.
 		results[i][0] = parties[i];
 		results[i][1] = 0;
 		results[i][2] = 0;
 		results[i][3] = 0;
+		results[i][4] = 0;
 	}
 	
 	results = fillFederalArrayByState(currResultsSH, results);
@@ -596,7 +617,6 @@ function fillFederalArray() {
 	results = fillFederalArrayByState(currResultsBY, results);
 	results = fillFederalArrayByState(currResultsBW, results);
 	results = fillFederalArrayByState(currResultsSL, results);
-	
 	return results;
 	
 }
@@ -1061,55 +1081,55 @@ function updateResultsTable(currResults, prevResults) {
 	document.getElementById("Party1Name").value = currResults[0][0];
 	document.getElementById("Party1Votes").value = currResults[0][1];
 	document.getElementById("Party1VoteShare").value = Math.round((currResults[0][1] / totalVotesCurr * 100) * 10) / 10;
-	document.getElementById("Party1Swing").value = Math.round(((currResults[0][1] / totalVotesCurr * 100) - (prevResults[indexs[0]][1] / totalVotesPrev * 100)) * 10) / 10;
+	document.getElementById("Party1Swing").value = ((Math.round(((currResults[0][1] / totalVotesCurr * 100) - (prevResults[indexs[0]][1] / totalVotesPrev * 100)) * 10) / 10) > 0 ? "+"+(Math.round(((currResults[0][1] / totalVotesCurr * 100) - (prevResults[indexs[0]][1] / totalVotesPrev * 100)) * 10) / 10) : (Math.round(((currResults[0][1] / totalVotesCurr * 100) - (prevResults[indexs[0]][1] / totalVotesPrev * 100)) * 10) / 10));
 	document.getElementById("Party1DirectSeats").value = currResults[0][2];
 	document.getElementById("Party1Seats").value = currResults[0][2] + currResults[0][3];
-	document.getElementById("Party1SeatChange").value = (currResults[0][2] + currResults[0][3]) - (prevResults[indexs[0]][2] + prevResults[indexs[0]][3]);
+	document.getElementById("Party1SeatChange").value = ((currResults[0][2] + currResults[0][3]) - (prevResults[indexs[0]][2] + prevResults[indexs[0]][3]) > 0 ? "+"+((currResults[0][2] + currResults[0][3]) - (prevResults[indexs[0]][2] + prevResults[indexs[0]][3])) : ((currResults[0][2] + currResults[0][3]) - (prevResults[indexs[0]][2] + prevResults[indexs[0]][3])));
 	document.getElementById("Party1SeatShare").value = Math.round(((currResults[0][2] + currResults[0][3]) / totalSeats * 100) * 10) / 10;
 	
 	document.getElementById("Party2Name").value = currResults[1][0];
 	document.getElementById("Party2Votes").value = currResults[1][1];
 	document.getElementById("Party2VoteShare").value = Math.round((currResults[1][1] / totalVotesCurr * 100) * 10) / 10;
-	document.getElementById("Party2Swing").value = Math.round(((currResults[1][1] / totalVotesCurr * 100) - (prevResults[indexs[1]][1] / totalVotesPrev * 100)) * 10) / 10;
+	document.getElementById("Party2Swing").value = ((Math.round(((currResults[1][1] / totalVotesCurr * 100) - (prevResults[indexs[1]][1] / totalVotesPrev * 100)) * 10) / 10) > 0 ? "+"+(Math.round(((currResults[1][1] / totalVotesCurr * 100) - (prevResults[indexs[1]][1] / totalVotesPrev * 100)) * 10) / 10) : (Math.round(((currResults[1][1] / totalVotesCurr * 100) - (prevResults[indexs[1]][1] / totalVotesPrev * 100)) * 10) / 10));
 	document.getElementById("Party2DirectSeats").value = currResults[1][2];
 	document.getElementById("Party2Seats").value = currResults[1][2] + currResults[1][3];
-	document.getElementById("Party2SeatChange").value = (currResults[1][2] + currResults[1][3]) - (prevResults[indexs[1]][2] + prevResults[indexs[1]][3]);
+	document.getElementById("Party2SeatChange").value = ((currResults[1][2] + currResults[1][3]) - (prevResults[indexs[1]][2] + prevResults[indexs[1]][3]) > 0 ? "+"+((currResults[1][2] + currResults[1][3]) - (prevResults[indexs[1]][2] + prevResults[indexs[1]][3])) : ((currResults[1][2] + currResults[1][3]) - (prevResults[indexs[1]][2] + prevResults[indexs[1]][3])));
 	document.getElementById("Party2SeatShare").value = Math.round(((currResults[1][2] + currResults[1][3]) / totalSeats * 100) * 10) / 10;
 
 	document.getElementById("Party3Name").value = currResults[2][0];
 	document.getElementById("Party3Votes").value = currResults[2][1];
 	document.getElementById("Party3VoteShare").value = Math.round((currResults[2][1] / totalVotesCurr * 100) * 10) / 10;
-	document.getElementById("Party3Swing").value = Math.round(((currResults[2][1] / totalVotesCurr * 100) - (prevResults[indexs[2]][1] / totalVotesPrev * 100)) * 10) / 10;
+	document.getElementById("Party3Swing").value = ((Math.round(((currResults[2][1] / totalVotesCurr * 100) - (prevResults[indexs[2]][1] / totalVotesPrev * 100)) * 10) / 10) > 0 ? "+"+(Math.round(((currResults[2][1] / totalVotesCurr * 100) - (prevResults[indexs[2]][1] / totalVotesPrev * 100)) * 10) / 10) : (Math.round(((currResults[2][1] / totalVotesCurr * 100) - (prevResults[indexs[2]][1] / totalVotesPrev * 100)) * 10) / 10));
 	document.getElementById("Party3DirectSeats").value = currResults[2][2];
 	document.getElementById("Party3Seats").value = currResults[2][2] + currResults[2][3];
-	document.getElementById("Party3SeatChange").value = (currResults[2][2] + currResults[2][3]) - (prevResults[indexs[2]][2] + prevResults[indexs[2]][3]);
+	document.getElementById("Party3SeatChange").value = ((currResults[2][2] + currResults[2][3]) - (prevResults[indexs[2]][2] + prevResults[indexs[2]][3]) > 0 ? "+"+((currResults[2][2] + currResults[2][3]) - (prevResults[indexs[2]][2] + prevResults[indexs[2]][3])) : ((currResults[2][2] + currResults[2][3]) - (prevResults[indexs[2]][2] + prevResults[indexs[2]][3])));
 	document.getElementById("Party3SeatShare").value = Math.round(((currResults[2][2] + currResults[2][3]) / totalSeats * 100) * 10) / 10;
 
 	document.getElementById("Party4Name").value = currResults[3][0];
 	document.getElementById("Party4Votes").value = currResults[3][1];
 	document.getElementById("Party4VoteShare").value = Math.round((currResults[3][1] / totalVotesCurr * 100) * 10) / 10;
-	document.getElementById("Party4Swing").value = Math.round(((currResults[3][1] / totalVotesCurr * 100) - (prevResults[indexs[3]][1] / totalVotesPrev * 100)) * 10) / 10;
+	document.getElementById("Party4Swing").value = ((Math.round(((currResults[3][1] / totalVotesCurr * 100) - (prevResults[indexs[3]][1] / totalVotesPrev * 100)) * 10) / 10) > 0 ? "+"+(Math.round(((currResults[3][1] / totalVotesCurr * 100) - (prevResults[indexs[3]][1] / totalVotesPrev * 100)) * 10) / 10) : (Math.round(((currResults[3][1] / totalVotesCurr * 100) - (prevResults[indexs[3]][1] / totalVotesPrev * 100)) * 10) / 10));
 	document.getElementById("Party4DirectSeats").value = currResults[3][2];
 	document.getElementById("Party4Seats").value = currResults[3][2] + currResults[3][3];
-	document.getElementById("Party4SeatChange").value = (currResults[3][2] + currResults[3][3]) - (prevResults[indexs[3]][2] + prevResults[indexs[3]][3]);
+	document.getElementById("Party4SeatChange").value = ((currResults[3][2] + currResults[3][3]) - (prevResults[indexs[3]][2] + prevResults[indexs[3]][3]) > 0 ? "+"+((currResults[3][2] + currResults[3][3]) - (prevResults[indexs[3]][2] + prevResults[indexs[3]][3])) : ((currResults[3][2] + currResults[3][3]) - (prevResults[indexs[3]][2] + prevResults[indexs[3]][3])));
 	document.getElementById("Party4SeatShare").value = Math.round(((currResults[3][2] + currResults[3][3]) / totalSeats * 100) * 10) / 10;
 	
 	document.getElementById("Party5Name").value = currResults[4][0];
 	document.getElementById("Party5Votes").value = currResults[4][1];
 	document.getElementById("Party5VoteShare").value = Math.round((currResults[4][1] / totalVotesCurr * 100) * 10) / 10;
-	document.getElementById("Party5Swing").value = Math.round(((currResults[4][1] / totalVotesCurr * 100) - (prevResults[indexs[4]][1] / totalVotesPrev * 100)) * 10) / 10;
+	document.getElementById("Party5Swing").value = ((Math.round(((currResults[4][1] / totalVotesCurr * 100) - (prevResults[indexs[4]][1] / totalVotesPrev * 100)) * 10) / 10) > 0 ? "+"+(Math.round(((currResults[4][1] / totalVotesCurr * 100) - (prevResults[indexs[4]][1] / totalVotesPrev * 100)) * 10) / 10) : (Math.round(((currResults[4][1] / totalVotesCurr * 100) - (prevResults[indexs[4]][1] / totalVotesPrev * 100)) * 10) / 10));
 	document.getElementById("Party5DirectSeats").value = currResults[4][2];
 	document.getElementById("Party5Seats").value = currResults[4][2] + currResults[4][3];
-	document.getElementById("Party5SeatChange").value = (currResults[4][2] + currResults[4][3]) - (prevResults[indexs[4]][2] + prevResults[indexs[4]][3]);
+	document.getElementById("Party5SeatChange").value = ((currResults[4][2] + currResults[4][3]) - (prevResults[indexs[4]][2] + prevResults[indexs[4]][3]) > 0 ? "+"+((currResults[4][2] + currResults[4][3]) - (prevResults[indexs[4]][2] + prevResults[indexs[4]][3])) : ((currResults[4][2] + currResults[4][3]) - (prevResults[indexs[4]][2] + prevResults[indexs[4]][3])));
 	document.getElementById("Party5SeatShare").value = Math.round(((currResults[4][2] + currResults[4][3]) / totalSeats * 100) * 10) / 10;
 	
 	document.getElementById("Party6Name").value = currResults[5][0];
 	document.getElementById("Party6Votes").value = currResults[5][1];
 	document.getElementById("Party6VoteShare").value = Math.round((currResults[5][1] / totalVotesCurr * 100) * 10) / 10;
-	document.getElementById("Party6Swing").value = Math.round(((currResults[5][1] / totalVotesCurr * 100) - (prevResults[indexs[5]][1] / totalVotesPrev * 100)) * 10) / 10;
+	document.getElementById("Party6Swing").value = ((Math.round(((currResults[5][1] / totalVotesCurr * 100) - (prevResults[indexs[5]][1] / totalVotesPrev * 100)) * 10) / 10) > 0 ? "+"+(Math.round(((currResults[5][1] / totalVotesCurr * 100) - (prevResults[indexs[5]][1] / totalVotesPrev * 100)) * 10) / 10) : (Math.round(((currResults[5][1] / totalVotesCurr * 100) - (prevResults[indexs[5]][1] / totalVotesPrev * 100)) * 10) / 10));
 	document.getElementById("Party6DirectSeats").value = currResults[5][2];
 	document.getElementById("Party6Seats").value = currResults[5][2] + currResults[5][3];
-	document.getElementById("Party6SeatChange").value = (currResults[5][2] + currResults[5][3]) - (prevResults[indexs[5]][2] + prevResults[indexs[5]][3]);
+	document.getElementById("Party6SeatChange").value = ((currResults[5][2] + currResults[5][3]) - (prevResults[indexs[5]][2] + prevResults[indexs[5]][3]) > 0 ? "+"+((currResults[5][2] + currResults[5][3]) - (prevResults[indexs[5]][2] + prevResults[indexs[5]][3])) : ((currResults[5][2] + currResults[5][3]) - (prevResults[indexs[5]][2] + prevResults[indexs[5]][3])));
 	document.getElementById("Party6SeatShare").value = Math.round(((currResults[5][2] + currResults[5][3]) / totalSeats * 100) * 10) / 10;	
 
 }

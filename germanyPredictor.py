@@ -1,3 +1,25 @@
+import csv
+import requests
+
+url = 'https://filipvanlaenen.github.io/eopaod/de.csv'
+r = requests.get(url, allow_redirects=True)
+
+open('de.csv', 'wb').write(r.content)
+
+
+
+file = open("de.csv", "r")
+
+for line in file:
+    fields = line.split(",")
+    CDU = str(fields[9])
+    print (CDU)
+
+file.close()
+
+
+
+
 file = open("germany-prediction.js", "w")
 
 
