@@ -32,8 +32,8 @@
 </div><div class="leaflet-pane leaflet-marker-pane"></div><div class="leaflet-pane leaflet-tooltip-pane"></div><div class="leaflet-pane leaflet-popup-pane"></div><div class="leaflet-proxy leaflet-zoom-animated" style="transform: translate3d(955.733px, 1582.83px, 0px) scale(8);"></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"><div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in">+</a><a class="leaflet-control-zoom-out" href="#" title="Zoom out" role="button" aria-label="Zoom out">−</a></div></div><div class="leaflet-top leaflet-right"></div><div class="leaflet-bottom leaflet-left"></div><div class="leaflet-bottom leaflet-right"><div class="leaflet-control-attribution leaflet-control"><a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> | Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>, Population data © <a href="http://census.gov/">US Census Bureau</a></div></div></div></div>
 
 
-<script type="text/javascript" src="swedish-constituencies.js"></script>
-<script type="text/javascript" src="swedish-municipalities.js"></script>
+<script type="text/javascript" src="uk-constituencies.js"></script>
+
 
 <script type="text/javascript">
 
@@ -126,7 +126,7 @@
 		});
 	}
 
-	geojson = L.geoJson(swedishMunicipalities, {
+	geojson = L.geoJson(constituenciesUK, {
 		style: style,
 		onEachFeature: onEachFeature
 	}).addTo(map);
