@@ -582,7 +582,7 @@ function displayPopup(e) {
 	
 	var voteTotalPrev = 0, voteTotalCurr = 0;
 		
-
+	
 	
 	for (var i = 0; i < prevArray.length; i++) {
 		voteTotalPrev = voteTotalPrev + prevArray[i][1];
@@ -591,6 +591,11 @@ function displayPopup(e) {
 
 	if (layer.feature.properties.UKNation == "England" || layer.feature.properties.UKNation == "Northern Ireland")
 	{
+		if (layer.feature.properties.Constituency == "Chorley")
+		{
+			prevArray[0][0] = "Speaker (Labour)";
+			currArray[0][0] = "Speaker (Labour)";
+		}
 		var list = "<b>" + layer.feature.properties.Constituency + ", "+ layer.feature.properties.UKNation +"</b></br>" 
 		+ " Party | Vote, % </br>"
 		+ "</br>"
@@ -601,12 +606,18 @@ function displayPopup(e) {
 		+ prevArray[3][0] + "  |  " + prevArray[3][1] + ", " + Math.round((((prevArray[3][1] / voteTotalPrev) * 100)) * 10) / 10  + "%</br>"
 		+ prevArray[4][0] + "  |  " + prevArray[4][1] + ", " + Math.round((((prevArray[4][1] / voteTotalPrev) * 100)) * 10) / 10  + "%</br>"
 		+ " </br>"
+		+ "Prev Majority: </br>"
+		+ prevArray[0][0] + "  |  " + (prevArray[0][1] - prevArray[1][1]) + ", " + Math.round(((((prevArray[0][1] - prevArray[1][1]) / voteTotalPrev) * 100)) * 10) / 10  + "%</br>"
+		+ " </br>"
 		+ " Current Prediction: </br>"
 		+ currArray[0][0] + "  |  " + currArray[0][1] + ", " + Math.round((((currArray[0][1] / voteTotalCurr) * 100)) * 10) / 10  + "%</br>"
 		+ currArray[1][0] + "  |  " + currArray[1][1] + ", " + Math.round((((currArray[1][1] / voteTotalCurr) * 100)) * 10) / 10  + "%</br>"
 		+ currArray[2][0] + "  |  " + currArray[2][1] + ", " + Math.round((((currArray[2][1] / voteTotalCurr) * 100)) * 10) / 10  + "%</br>"
 		+ currArray[3][0] + "  |  " + currArray[3][1] + ", " + Math.round((((currArray[3][1] / voteTotalCurr) * 100)) * 10) / 10  + "%</br>"
-		+ currArray[4][0] + "  |  " + currArray[4][1] + ", " + Math.round((((currArray[4][1] / voteTotalCurr) * 100)) * 10) / 10  + "%</br>";
+		+ currArray[4][0] + "  |  " + currArray[4][1] + ", " + Math.round((((currArray[4][1] / voteTotalCurr) * 100)) * 10) / 10  + "%</br>"
+		+ " </br>"
+		+ "Curr Majority: </br>"
+		+ currArray[0][0] + "  |  " + (currArray[0][1] - currArray[1][1]) + ", " + Math.round(((((currArray[0][1] - currArray[1][1]) / voteTotalCurr) * 100)) * 10) / 10  + "%</br>";
 	}
 	else if (layer.feature.properties.UKNation == "Scotland" || layer.feature.properties.UKNation == "Wales")
 	{
@@ -621,13 +632,19 @@ function displayPopup(e) {
 		+ prevArray[4][0] + "  |  " + prevArray[4][1] + ", " + Math.round((((prevArray[4][1] / voteTotalPrev) * 100)) * 10) / 10  + "%</br>"
 		+ prevArray[5][0] + "  |  " + prevArray[5][1] + ", " + Math.round((((prevArray[5][1] / voteTotalPrev) * 100)) * 10) / 10  + "%</br>"
 		+ " </br>"
+		+ "Prev Majority: </br>"
+		+ prevArray[0][0] + "  |  " + (prevArray[0][1] - prevArray[1][1]) + ", " + Math.round(((((prevArray[0][1] - prevArray[1][1]) / voteTotalPrev) * 100)) * 10) / 10  + "%</br>"
+		+ " </br>"
 		+ " Current Prediction: </br>"
 		+ currArray[0][0] + "  |  " + currArray[0][1] + ", " + Math.round((((currArray[0][1] / voteTotalCurr) * 100)) * 10) / 10  + "%</br>"
 		+ currArray[1][0] + "  |  " + currArray[1][1] + ", " + Math.round((((currArray[1][1] / voteTotalCurr) * 100)) * 10) / 10  + "%</br>"
 		+ currArray[2][0] + "  |  " + currArray[2][1] + ", " + Math.round((((currArray[2][1] / voteTotalCurr) * 100)) * 10) / 10  + "%</br>"
 		+ currArray[3][0] + "  |  " + currArray[3][1] + ", " + Math.round((((currArray[3][1] / voteTotalCurr) * 100)) * 10) / 10  + "%</br>"
 		+ currArray[4][0] + "  |  " + currArray[4][1] + ", " + Math.round((((currArray[4][1] / voteTotalCurr) * 100)) * 10) / 10  + "%</br>"
-		+ currArray[5][0] + "  |  " + currArray[5][1] + ", " + Math.round((((currArray[5][1] / voteTotalCurr) * 100)) * 10) / 10  + "%</br>";
+		+ currArray[5][0] + "  |  " + currArray[5][1] + ", " + Math.round((((currArray[5][1] / voteTotalCurr) * 100)) * 10) / 10  + "%</br>"
+		+ " </br>"
+		+ "Curr Majority: </br>"
+		+ currArray[0][0] + "  |  " + (currArray[0][1] - currArray[1][1]) + ", " + Math.round(((((currArray[0][1] - currArray[1][1]) / voteTotalCurr) * 100)) * 10) / 10  + "%</br>";;
 		
 	}
 	
