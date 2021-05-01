@@ -2147,7 +2147,7 @@ function displayPopup(e) {
 	var list = "<b>" + layer.feature.properties.name + "</b></br>" 
 	+ " Party | Vote, % </br>"
 	+ "</br>"
-	+ " Previous Results (2017): </br>"
+	+ " Previous Results (2018): </br>"
 	+ prevArray[0][0] + "  |  " + prevArray[0][1] + ", " + Math.round((((prevArray[0][1] / voteTotalPrev) * 100)) * 10) / 10  + "%</br>"
 	+ prevArray[1][0] + "  |  " + prevArray[1][1] + ", " + Math.round((((prevArray[1][1] / voteTotalPrev) * 100)) * 10) / 10  + "%</br>"
 	+ prevArray[2][0] + "  |  " + prevArray[2][1] + ", " + Math.round((((prevArray[2][1] / voteTotalPrev) * 100)) * 10) / 10  + "%</br>"
@@ -2176,7 +2176,7 @@ function displayPopup(e) {
 function updateResultsTable(currResults, prevResults) {
 	
 
-	var indexs = new Array(6);
+	var indexs = new Array(8);
 	index = 0;
 	
 	for (var i = 0; i < currResults.length; i++) {
