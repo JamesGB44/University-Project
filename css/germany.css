@@ -174,7 +174,7 @@ body{
   width: 100%;
 }
 
-.results-table-container #Party1Name, #Party2Name, #Party3Name, #Party4Name, #Party5Name, #Party6Name, #Party1Votes, #Party2Votes, #Party3Votes, #Party4Votes, #Party5Votes, #Party6Votes {
+.results-table-container #Party1Name, #Party2Name, #Party3Name, #Party4Name, #Party5Name, #Party6Name, #TotalName, #Party1Votes, #Party2Votes, #Party3Votes, #Party4Votes, #Party5Votes, #Party6Votes, #TotalVotes {
   width: 85px;
 }
 

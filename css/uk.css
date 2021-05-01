@@ -174,11 +174,11 @@ body{
   width: 100%;
 }
 
-.results-table-container #Party1Name, #Party2Name, #Party3Name, #Party4Name, #Party5Name, #Party6Name, #Party7Name, #Party8Name {
+.results-table-container #Party1Name, #Party2Name, #Party3Name, #Party4Name, #Party5Name, #Party6Name, #Party7Name, #Party8Name, #TotalName {
   width: 140px;
 }
 
-.results-table-container #Party1Votes, #Party2Votes, #Party3Votes, #Party4Votes, #Party5Votes, #Party6Votes, #Party7Votes, #Party8Votes {
+.results-table-container #Party1Votes, #Party2Votes, #Party3Votes, #Party4Votes, #Party5Votes, #Party6Votes, #Party7Votes, #Party8Votes, #TotalVotes {
   width: 82px;
 }
 
