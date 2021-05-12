@@ -3,9 +3,9 @@ import requests
 import datetime as dt
 import random
 
-url = 'https://filipvanlaenen.github.io/eopaod/de.csv'
+url = 'https://filipvanlaenen.github.io/eopaod/se.csv'
 r = requests.get(url, allow_redirects=True)
-open('de.csv', 'wb').write(r.content)
+open('se.csv', 'wb').write(r.content)
 
 
 #Current Date
@@ -15,10 +15,10 @@ dToday = dt.datetime.today()
 dLimit = dt.datetime.today() - dt.timedelta(30)
 
 #Open Polling Data CSV
-file = open("de.csv", "r")
+file = open("se.csv", "r")
 
 #Define array with each party as entries with blank polling data
-arrayOfPartiesPolling = [["CDU/CSU",0],["SPD",0],["AfD",0],["FDP",0],["Left",0],["Green",0]]
+arrayOfPartiesPolling = [["S",0],["M",0],["SD",0],["C",0],["V",0],["KD",0],["L",0],["MP",0]]
 #Blank Margin of error
 marginOfError = 0
 #Count number of polling entries within the last month
@@ -37,24 +37,22 @@ for line in file:
         if (pollDateConverted > str(dLimit) and pollDateConverted < str(dToday)):
             #Accumulate margin of error
             marginOfError += float(str(fields[8]).replace('%',''))
-            #If CDU/CSU Polling data is split then combine the CDU and CSU Individually
-            if (str(fields[9]) == "Not Available"):
-                arrayOfPartiesPolling[0][1] += (float(str(fields[15]).replace('%','')) + float(str(fields[16]).replace('%','')))
-
-            else:
-                #CDU/CSU Together
-                arrayOfPartiesPolling[0][1] += float(str(fields[9]).replace('%',''))
-
-            #SPD
+            #Social Democrats (S)
+            arrayOfPartiesPolling[0][1] += float(str(fields[9]).replace('%',''))
+            #Moderates (M)
             arrayOfPartiesPolling[1][1] += float(str(fields[10]).replace('%',''))
-            #AfD
+            #Sweden Democrats (SD)
             arrayOfPartiesPolling[2][1] += float(str(fields[11]).replace('%',''))
-            #FDP
+            #Centre (C)
             arrayOfPartiesPolling[3][1] += float(str(fields[12]).replace('%',''))
-            #Left
+            #Left (V)
             arrayOfPartiesPolling[4][1] += float(str(fields[13]).replace('%',''))
-            #Green
+            #Christian Democrats (KD)
             arrayOfPartiesPolling[5][1] += float(str(fields[14]).replace('%',''))
+            #Liberals (L)
+            arrayOfPartiesPolling[6][1] += float(str(fields[15]).replace('%',''))
+            #Green (MP)
+            arrayOfPartiesPolling[7][1] += float(str(fields[16]).replace('%',''))
             #Increment number of entries
             noOfPollEntries += 1
 #Close File
@@ -66,7 +64,7 @@ for i in range(len(arrayOfPartiesPolling)):
 marginOfError /= noOfPollEntries
 
 #Create new array to store predicted polling values
-arrayOfPartiesPrediction = [["CDU/CSU",0],["SPD",0],["AfD",0],["FDP",0],["Left",0],["Green",0]]
+arrayOfPartiesPrediction = [["S",0],["M",0],["SD",0],["C",0],["V",0],["KD",0],["L",0],["MP",0]]
 #Number of times a prediction is created
 noOfPredictions = 10000
 
@@ -79,28 +77,34 @@ for i in range(noOfPredictions):
     arrayOfPartiesPrediction[3][1] += arrayOfPartiesPolling[3][1] + random.uniform(-marginOfError, marginOfError)
     arrayOfPartiesPrediction[4][1] += arrayOfPartiesPolling[4][1] + random.uniform(-marginOfError, marginOfError)
     arrayOfPartiesPrediction[5][1] += arrayOfPartiesPolling[5][1] + random.uniform(-marginOfError, marginOfError)
+    arrayOfPartiesPrediction[6][1] += arrayOfPartiesPolling[6][1] + random.uniform(-marginOfError, marginOfError)
+    arrayOfPartiesPrediction[7][1] += arrayOfPartiesPolling[7][1] + random.uniform(-marginOfError, marginOfError)
 
 #Loop through each party and get a final prediction by mean average of the number of predictions created
 for i in range(len(arrayOfPartiesPrediction)):
     arrayOfPartiesPrediction[i][1] /= noOfPredictions
 
 #Round each prediction to 1dp
-CDUprediction = round(arrayOfPartiesPrediction[0][1], 1)
-SPDprediction = round(arrayOfPartiesPrediction[1][1], 1)
-AfDPrediction = round(arrayOfPartiesPrediction[2][1], 1)
-FDPprediction = round(arrayOfPartiesPrediction[3][1], 1)
-Leftprediction = round(arrayOfPartiesPrediction[4][1], 1)
-Greenprediction = round(arrayOfPartiesPrediction[5][1], 1)
+Sprediction = round(arrayOfPartiesPrediction[0][1], 1)
+Mprediction = round(arrayOfPartiesPrediction[1][1], 1)
+SDprediction = round(arrayOfPartiesPrediction[2][1], 1)
+Cprediction = round(arrayOfPartiesPrediction[3][1], 1)
+Vprediction = round(arrayOfPartiesPrediction[4][1], 1)
+KDprediction = round(arrayOfPartiesPrediction[5][1], 1)
+Lprediction = round(arrayOfPartiesPrediction[6][1], 1)
+MPprediction = round(arrayOfPartiesPrediction[7][1], 1)
 
 #Open javascript file to output the data
-file = open("../js/germany-prediction.js", "w")
+file = open("../js/sweden-prediction.js", "w")
 #Output the data by writing the predictions as if they were javascript variables
-file.write("var CDUprediction = "+str(CDUprediction)+"; \n")
-file.write("var SPDprediction = "+str(SPDprediction)+"; \n")
-file.write("var AfDprediction = "+str(AfDPrediction)+"; \n")
-file.write("var FDPprediction = "+str(FDPprediction)+"; \n")
-file.write("var Leftprediction = "+str(Leftprediction)+"; \n")
-file.write("var Greenprediction = "+str(Greenprediction)+"; \n")
+file.write("var Sprediction = "+str(Sprediction)+"; \n")
+file.write("var Mprediction = "+str(Mprediction)+"; \n")
+file.write("var SDprediction = "+str(SDprediction)+"; \n")
+file.write("var Cprediction = "+str(Cprediction)+"; \n")
+file.write("var Vprediction = "+str(Vprediction)+"; \n")
+file.write("var KDprediction = "+str(KDprediction)+"; \n")
+file.write("var Lprediction = "+str(Lprediction)+"; \n")
+file.write("var MPprediction = "+str(MPprediction)+"; \n")
 
 #Close File
 file.close()
