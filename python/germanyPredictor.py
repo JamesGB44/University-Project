@@ -3,6 +3,7 @@ import requests
 import datetime as dt
 import random
 
+#Import from current URL
 url = 'https://filipvanlaenen.github.io/eopaod/de.csv'
 r = requests.get(url, allow_redirects=True)
 open('de.csv', 'wb').write(r.content)
