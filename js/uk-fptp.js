@@ -2,6 +2,7 @@ var corner1 = L.latLng(62.557, -12),
 corner2 = L.latLng(49.469, 5.67),
 bounds = L.latLngBounds(corner1, corner2);
 
+
 var map = L.map('map', {
     center: [55.5, -4],
     zoom: 6,

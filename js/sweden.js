@@ -430,7 +430,7 @@ function nationalResultsToConstituencyLevelCalculation(initialisation, partyArra
 			
 		}
 		for (var i = 0; i < partyArray.length; i++){
-			partyArray[i][3] = (partyArray[i][1] / (1 + (2*partyArray[i][2])));
+			partyArray[i][3] = (partyArray[i][1] / (2 * partyArray[i][2] + 1));
 			
 		}
 
@@ -440,7 +440,7 @@ function nationalResultsToConstituencyLevelCalculation(initialisation, partyArra
 		{
 			partyArray.sort(sortFunctionB)
 			partyArray[0][2] = partyArray[0][2] + 1;
-			partyArray[0][3] = partyArray[0][1] / (1 + (2*partyArray[0][2]));
+			partyArray[0][3] = partyArray[0][1] / (2 * partyArray[0][2] + 1);
 		}
 		partyArray.sort(sortFunctionC);
 
@@ -1548,6 +1548,7 @@ function displayVoteShareTable() {
 	for (var i = 0; i < cols.length; i++)
     {
         cols[i].style["visibility"] = "visible";
+		cols[i].style["display"] = "revert";
     }	
 }
 
@@ -1556,6 +1557,7 @@ function hideVoteShareTable() {
 	for (var i = 0; i < cols.length; i++)
     {
         cols[i].style["visibility"] = "hidden";
+		cols[i].style["display"] = "none";
     }	
 }
 

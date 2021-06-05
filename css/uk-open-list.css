@@ -1,0 +1,234 @@
+
+/*
+*{
+	padding: 0 !important;
+	margin: 0 !important;
+}
+*/
+
+
+
+
+body{
+  color: #342038;
+  background-color: #2c2f33;
+}
+
+.pageTitle{
+  color: white;
+}
+.feature-wrapper{
+  font-family: 'Dosis', sans-serif;
+  
+}
+
+.feature-wrapper{
+  font-family: 'Dosis', sans-serif;
+  margin: 0.3rem 0.5rem 0.3rem 0.5rem !important;
+  background-color: #86cd82;
+  
+}
+
+@media only screen and (max-width: 575px){
+  .feature-wrapper{
+    margin: 0.3rem 0 0.3rem 0 !important;
+  }
+}
+
+
+
+.btn-item{
+  color: #fff;
+  text-decoration: none;
+  text-align: center;
+  background: #0069ed;
+  transition: 250ms ease-in-out;
+  border: none;
+  padding: 5px !important;
+}
+
+.btn-item:hover, .btn-item:focus{
+  background-color: #0053ba;
+}
+
+.btn{
+  margin-top: 5px !important;
+}
+
+.row-heading{
+  min-height: 10vh;
+}
+
+.leaflet-popup-content-wrapper{
+	text-align: center;
+}
+
+
+.leaflet-popup-content{
+	margin: 20px !important;
+}
+
+.leaflet-popup-content{
+	margin-bottom: 5px;
+	font-size: 14px;
+}
+
+.leaflet-top{
+	padding-top: 10px;
+	padding-left: 25px;
+}
+
+.leaflet-right{
+	padding-top: 10px;
+	padding-right: 25px;
+}
+
+
+
+.vote-share-table-container{
+   margin-top: 10px;
+   visibility: visible;
+}
+
+.vote-share-table-container table, th, td{
+  border: 1px solid black;
+  border-collapse: collapse;
+  background-color: white;
+  text-align: center;
+  width: 100px;
+  height: 30px;
+}
+.vote-share-table-container th, td {
+  padding: 5px;    
+}
+
+.vote-share-table-container button {
+  padding: 5px;
+  background-color: inherit;
+  border: none;
+  font-size: inherit;
+  font-weight: inherit; 
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.vote-share-table-container input {
+  padding: 5px;
+  font-size: inherit;
+  font-weight: inherit; 
+  pointer-events: auto;
+  text-align: center;
+  cursor: pointer;
+  width: 100px;
+  height: 30px;
+}
+
+.vote-share-table-container:after {
+  content: "";
+  clear: both;
+}
+
+.vote-share-table-container button:hover {
+  background-color: grey;
+}
+
+
+.results-table-container{
+   margin-top: 10px;
+   visibility: visible;
+}
+
+.results-table-container table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  background-color: white;
+  text-align: center;
+  height: 25px;
+  width: 85px;
+}
+.results-table-container th, td {
+  padding: 5px;    
+}
+
+.results-table-container button {
+  padding: 5px;
+  background-color: inherit;
+  border: none;
+  font-size: inherit;
+  font-weight: inherit; 
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.results-table-container input {
+  padding: 5px;
+  font-size: inherit;
+  font-weight: inherit; 
+  border: none;
+  text-align: center;
+  height: 25px;
+  width: 50px;
+}
+
+.results-table-container #ResultsTableTitle {
+  width: 100%;
+}
+
+.results-table-container #Party1Name, #Party2Name, #Party3Name, #Party4Name, #Party5Name, #Party6Name, #Party7Name, #Party8Name, #Party9Name, #Party10Name, #Party11Name, #Party12Name, #TotalName {
+  width: 140px;
+}
+
+.results-table-container #Party1Votes, #Party2Votes, #Party3Votes, #Party4Votes, #Party5Votes, #Party6Votes, #Party7Votes, #Party8Votes, #Party9Votes, #Party10Votes, #Party11Votes, #Party12Votes, #TotalVotes {
+  width: 82px;
+}
+
+
+.results-table-container:after {
+  content: "";
+  clear: both;
+}
+
+.results-table-container button:hover {
+  background-color: grey;
+}
+
+
+.btn-group button {
+  background-color: #4CAF50; /* Green background */
+  border: 2px solid black; /* Green border */
+  color: white; /* White text */
+  padding: 10px 24px; /* Some padding */
+  cursor: pointer; /* Pointer/hand icon */
+  margin-right: 20px;
+  pointer-events: auto;
+}
+
+/* Clear floats (clearfix hack) */
+.btn-group:after {
+  content: "";
+  clear: both;
+}
+
+/* Add a background color on hover */
+.btn-group button:hover {
+  background-color: #3e8e41;
+}
+
+ a, a:hover, a:focus, a:active {
+      text-decoration: none;
+      color: inherit !important;
+	  font-color: inherit;
+ } 
+
+
+
+
+
+
+
+
+
+
+
+
+

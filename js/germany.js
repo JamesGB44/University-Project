@@ -1392,6 +1392,7 @@ function displayVoteShareTable() {
 	for (var i = 0; i < cols.length; i++)
     {
         cols[i].style["visibility"] = "visible";
+		cols[i].style["display"] = "revert";
     }	
 }
 
@@ -1400,6 +1401,7 @@ function hideVoteShareTable() {
 	for (var i = 0; i < cols.length; i++)
     {
         cols[i].style["visibility"] = "hidden";
+		cols[i].style["display"] = "none";
     }	
 }
 
